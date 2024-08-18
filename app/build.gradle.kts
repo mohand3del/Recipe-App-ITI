@@ -58,23 +58,23 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycle_version")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycle_version")
 
-    //gson
+    // Gson
     implementation ("com.google.code.gson:gson:2.11.0")
 
-    //retrofit
+    // Retrofit
     implementation ("com.squareup.retrofit2:retrofit:2.11.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.11.0")
 
-    //glide
+    // Glide
     implementation ("com.github.bumptech.glide:glide:4.16.0")
 
-    //room
+    // Room
     implementation("androidx.room:room-runtime:2.6.1")
     annotationProcessor("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-ktx:2.6.1")
     ksp("androidx.room:room-compiler:2.6.1")
 
-    //splashscreen
+    // Splashscreen
     implementation("androidx.core:core-splashscreen:1.0.0")
 
 }

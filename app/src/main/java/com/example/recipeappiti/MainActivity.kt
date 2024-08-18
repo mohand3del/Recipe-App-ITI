@@ -17,6 +17,4 @@ class MainActivity : AppCompatActivity() {
             insets
         }
     }
-
-    // Hossam was here !!
 }
