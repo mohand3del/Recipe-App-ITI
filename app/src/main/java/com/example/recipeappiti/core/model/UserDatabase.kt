@@ -19,7 +19,7 @@ abstract class UserDatabase: RoomDatabase() {
                 Room.databaseBuilder(
                     context = context,
                     klass = UserDatabase::class.java,
-                    name = "products_database"
+                    name = "recipes_database"
                 ).build().also { INSTANCE = it }
             }
         }
