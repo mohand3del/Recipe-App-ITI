@@ -13,7 +13,10 @@ class UserViewModel(private val userRepository: UserRepository): ViewModel() {
     val user: LiveData<User?> get() = _user
 
     fun getUser(email: String, password: String) {
-        _user.value = userRepository.getUser(email, password).value
+        viewModelScope.launch {
+            val foundUser = userRepository.getUser(email, password)
+            _user.postValue(foundUser)
+        }
     }
 
     fun addUser(user: User) {
