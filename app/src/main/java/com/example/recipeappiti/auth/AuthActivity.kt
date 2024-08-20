@@ -10,7 +10,7 @@ import com.example.recipeappiti.R
 import com.example.recipeappiti.auth.model.UserRepository
 import com.example.recipeappiti.auth.viewmodel.UserViewModel
 import com.example.recipeappiti.auth.viewmodel.UserViewModelFactory
-import com.example.recipeappiti.core.model.UserDatabase
+import com.example.recipeappiti.core.model.local.UserDatabase
 
 class AuthActivity : AppCompatActivity() {
     private val userViewModel: UserViewModel by viewModels {
