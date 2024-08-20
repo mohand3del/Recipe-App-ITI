@@ -1,4 +1,4 @@
-package com.example.recipeappiti.core.model.local
+package com.example.recipeappiti.core.model
 
 import android.content.Context
 import androidx.room.Database
