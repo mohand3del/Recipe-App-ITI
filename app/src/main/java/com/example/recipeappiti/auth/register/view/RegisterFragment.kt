@@ -11,6 +11,7 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.recipeappiti.R
+import com.example.recipeappiti.auth.model.util.AlertUtil
 import com.example.recipeappiti.auth.model.ValidateCredentials
 import com.example.recipeappiti.auth.model.data.LocalDataSourceImpl
 import com.example.recipeappiti.auth.register.view.adapters.CuisineAdapter
@@ -128,35 +129,35 @@ class RegisterFragment : Fragment() {
         registerViewModel.usernameMessage.observe(viewLifecycleOwner, Observer { validationResult ->
             usernameLayout.helperText = when (validationResult) {
                 is ValidateCredentials.Valid -> null
-                is ValidateCredentials.Invalid -> validationResult.message
+                is ValidateCredentials.InValid -> validationResult.message
             }
         })
 
         registerViewModel.emailMessage.observe(viewLifecycleOwner, Observer { validationResult ->
             emailLayout.helperText = when (validationResult) {
                 is ValidateCredentials.Valid -> null
-                is ValidateCredentials.Invalid -> validationResult.message
+                is ValidateCredentials.InValid -> validationResult.message
             }
         })
 
         registerViewModel.passwordMessage.observe(viewLifecycleOwner, Observer { validationResult ->
             passwordLayout.helperText = when (validationResult) {
                 is ValidateCredentials.Valid -> null
-                is ValidateCredentials.Invalid -> validationResult.message
+                is ValidateCredentials.InValid -> validationResult.message
             }
         })
 
         registerViewModel.confirmPasswordMessage.observe(viewLifecycleOwner, Observer { validationResult ->
             passwordConfirmLayout.helperText = when (validationResult) {
                 is ValidateCredentials.Valid -> null
-                is ValidateCredentials.Invalid -> validationResult.message
+                is ValidateCredentials.InValid -> validationResult.message
             }
         })
 
         registerViewModel.cuisineMessage.observe(viewLifecycleOwner, Observer { validationResult ->
             cuisineLayout.helperText = when (validationResult) {
                 is ValidateCredentials.Valid -> null
-                is ValidateCredentials.Invalid -> validationResult.message
+                is ValidateCredentials.InValid -> validationResult.message
             }
         })
 
@@ -193,7 +194,7 @@ class RegisterFragment : Fragment() {
             )
         } else {
             val message = "Please Provide Valid Credentials"
-            registerViewModel.callAlert(requireContext(), message)
+            AlertUtil.showAlert(requireContext(), message)
         }
     }
 }

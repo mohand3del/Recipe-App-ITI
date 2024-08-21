@@ -1,4 +1,4 @@
-package com.example.recipeappiti.auth.model
+package com.example.recipeappiti.auth.model.util
 
 import org.mindrot.jbcrypt.BCrypt
 

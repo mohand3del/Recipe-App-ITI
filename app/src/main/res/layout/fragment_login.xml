@@ -84,7 +84,7 @@
                 app:boxBackgroundColor="@color/white_v2"
                 app:counterEnabled="true"
                 app:counterMaxLength="16"
-                app:counterTextColor="@color/white"
+                app:counterTextColor="@color/black"
                 app:counterTextAppearance="@font/poppins_light"
                 app:endIconMode="password_toggle"
                 app:boxStrokeWidth="0dp"
@@ -149,20 +149,36 @@
 
 
         <TextView
-            android:id="@+id/signUpText"
+            android:id="@+id/signUpQuestion"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="8dp"
             android:fontFamily="@font/work_sans"
             android:gravity="start"
-            android:text="Don't have an account? Sign Up"
+            android:text="Don't have an account?"
             android:textAppearance="@style/CustomTextStyle"
             android:textColor="@color/black"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="@id/passwordCard"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="@id/passwordCard"
+            android:textSize="18sp"
+            app:layout_constraintEnd_toEndOf="@+id/signInButton"
+            app:layout_constraintHorizontal_bias="0.008"
+            app:layout_constraintStart_toStartOf="@+id/signInButton"
             app:layout_constraintTop_toBottomOf="@id/signInButton" />
+
+        <TextView
+            android:id="@+id/signUpText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:clickable="true"
+            android:text="Sign Up"
+            android:textColor="@color/warning"
+            android:textSize="18sp"
+            android:textStyle="bold|italic"
+            app:layout_constraintBottom_toBottomOf="@+id/signUpQuestion"
+            app:layout_constraintEnd_toEndOf="@+id/signInButton"
+            app:layout_constraintHorizontal_bias="0.095"
+            app:layout_constraintStart_toEndOf="@+id/signUpQuestion"
+            app:layout_constraintTop_toBottomOf="@+id/signInButton"
+            app:layout_constraintVertical_bias="1.0" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"
