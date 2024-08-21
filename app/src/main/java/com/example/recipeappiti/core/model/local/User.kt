@@ -1,4 +1,4 @@
-package com.example.recipeappiti.auth.model
+package com.example.recipeappiti.core.model.local
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
@@ -7,7 +7,8 @@ import androidx.room.PrimaryKey
 data class User(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val email: String,
     val username: String,
-    val password: String
+    val email: String,
+    val password: String,
+    val cuisine: String
 )

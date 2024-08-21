@@ -1,6 +1,5 @@
-package com.example.recipeappiti.auth.model
+package com.example.recipeappiti.core.model.local
 
-import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -11,6 +10,6 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addUser(user: User)
 
-    @Query("SELECT * FROM user WHERE email = :email AND password = :password LIMIT 1")
-    suspend fun getUser(email: String, password: String): User?
+    @Query("SELECT * FROM user WHERE email = :email LIMIT 1")
+    suspend fun getUser(email: String): User?
 }

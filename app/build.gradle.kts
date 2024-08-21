@@ -77,4 +77,7 @@ dependencies {
     // Splashscreen
     implementation("androidx.core:core-splashscreen:1.0.0")
 
+    // Hashing
+    implementation("org.mindrot:jbcrypt:0.4")
+
 }
