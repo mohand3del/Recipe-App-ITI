@@ -2,6 +2,7 @@
     <string name="app_name">Recipe App ITI</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="signup">Welcome\nSign Up!</string>
     <string name="drawer_closed">drawer closed</string>
     <string name="drawer_opened">drawer opened</string>
     <string name="required">Required</string>

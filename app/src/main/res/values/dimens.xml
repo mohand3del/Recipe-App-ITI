@@ -15,5 +15,5 @@
     <dimen name="button_margin_top">0dp</dimen>
     <dimen name="button_margin_left">0dp</dimen>
     <dimen name="button_border_radius">10dp</dimen>
-    <dimen name="MarginTop">55dp</dimen>
+    <dimen name="MarginTop">40dp</dimen>
 </resources>
