@@ -45,7 +45,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:boxBackgroundColor="@color/white_v2"
-                app:helperText="@string/required"
+                app:helperText=" "
                 app:helperTextTextColor="@color/warning"
                 app:boxStrokeWidth="0dp"
                 app:helperTextTextAppearance="@style/CustomHelperTextStyle"
@@ -82,13 +82,11 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:boxBackgroundColor="@color/white_v2"
-                app:counterEnabled="true"
-                app:counterMaxLength="16"
                 app:counterTextColor="@color/black"
                 app:counterTextAppearance="@font/poppins_light"
                 app:endIconMode="password_toggle"
                 app:boxStrokeWidth="0dp"
-                app:helperText="@string/required"
+                app:helperText=" "
                 app:helperTextTextColor="@color/warning"
                 app:helperTextTextAppearance="@style/CustomHelperTextStyle"
                 app:hintEnabled="true">
@@ -100,7 +98,6 @@
                     android:layout_height="wrap_content"
                     android:hint="Password"
                     android:inputType="textPassword"
-                    android:maxLength="16"
                     android:textAppearance="@style/CustomTextStyle" />
 
             </com.google.android.material.textfield.TextInputLayout>

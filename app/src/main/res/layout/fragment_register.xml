@@ -182,45 +182,6 @@
 
         </com.google.android.material.card.MaterialCardView>
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cuisineCard"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/MarginTop"
-            app:layout_constraintEnd_toStartOf="@+id/guideline2"
-            app:layout_constraintStart_toStartOf="@+id/guideline"
-            app:layout_constraintTop_toBottomOf="@+id/passwordConfirmCard"
-            app:strokeWidth="0dp"
-            app:cardBackgroundColor="@color/white_v3">
-
-            <com.google.android.material.textfield.TextInputLayout
-                android:id="@+id/cuisineLayout"
-                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:boxBackgroundColor="@color/white_v2"
-                app:endIconMode="dropdown_menu"
-                app:boxStrokeWidth="0dp"
-                app:helperText="@string/required"
-                app:helperTextTextColor="@color/warning"
-                app:helperTextTextAppearance="@style/CustomHelperTextStyle"
-                app:hintEnabled="true">
-
-                <AutoCompleteTextView
-                    android:id="@+id/cuisineDropdown"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Cuisine"
-                    android:inputType="none"
-                    android:focusable="false"
-                    android:clickable="true"
-                    android:cursorVisible="false"
-                    android:textAppearance="@style/CustomTextStyle" />
-
-            </com.google.android.material.textfield.TextInputLayout>
-
-        </com.google.android.material.card.MaterialCardView>
-
         <Button
             android:id="@+id/signUpButton"
             style="@style/Widget.Material3.Button"
@@ -243,7 +204,7 @@
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintBottom_toBottomOf="parent"
             tools:layout_editor_absoluteY="642dp"
-            app:layout_constraintTop_toBottomOf="@+id/cuisineCard" />
+            app:layout_constraintTop_toBottomOf="@+id/passwordConfirmCard" />
 
         <androidx.constraintlayout.widget.Guideline
             android:id="@+id/guideline"

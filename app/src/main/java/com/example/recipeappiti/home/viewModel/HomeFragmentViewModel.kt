@@ -107,11 +107,11 @@ class HomeFragmentViewModel(
     private var _userCuisine: MutableLiveData<Response<String?>> = MutableLiveData()
     val userCuisine: LiveData<Response<String?>> get() = _userCuisine
 
-    fun getCuisine(email: String) {
+    fun getCuisine(email: List<String>) {
 
-        applyResponse(_userCuisine) {
-            userRepository.getCuisine(email)
-        }
+//        applyResponse(_userCuisine) {
+//            userRepository.getCuisines(email)
+//        }
 
     }
 

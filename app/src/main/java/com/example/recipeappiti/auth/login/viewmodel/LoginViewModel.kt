@@ -43,7 +43,6 @@ class LoginViewModel(private val userRepository: UserRepositoryImpl) : ViewModel
     fun validateEmail(email: String) {
         _emailMessage.value = when {
             email.isEmpty() -> ValidateCredentials.InValid("Email cannot be empty")
-            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> ValidateCredentials.InValid("Invalid email address")
             else -> ValidateCredentials.Valid
         }
     }
