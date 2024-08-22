@@ -7,11 +7,13 @@ interface LocalDataSource {
 
     suspend fun addUserToDB(user: User)
 
+    suspend fun getPassword(email: String): String?
+
+    suspend fun getLoggedInUser(): User?
+
     suspend fun getUserCuisines(): List<String>?
 
     suspend fun updateUserCuisines(cuisines: List<String>)
 
     suspend fun updateUserLogInStatus(isLoggedIn: Boolean, email: String)
-
-    suspend fun getLoggedInUser(): User?
 }

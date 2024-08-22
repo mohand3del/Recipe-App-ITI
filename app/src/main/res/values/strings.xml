@@ -7,4 +7,5 @@
     <string name="drawer_closed">drawer closed</string>
     <string name="drawer_opened">drawer opened</string>
     <string name="required">Required</string>
+    <string name="login_alert">Please fill in all fields or remove spaces</string>
 </resources>

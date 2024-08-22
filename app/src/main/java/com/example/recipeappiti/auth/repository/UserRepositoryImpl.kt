@@ -12,6 +12,14 @@ class UserRepositoryImpl(private val userDataSource: LocalDataSource): UserRepos
         userDataSource.addUserToDB(user)
     }
 
+    override suspend fun getPassword(email: String): String? {
+        return userDataSource.getPassword(email)
+    }
+
+    override suspend fun getLoggedInUser(): User? {
+        return userDataSource.getLoggedInUser()
+    }
+
     override suspend fun getCuisines():List<String>? {
         return userDataSource.getUserCuisines()
     }
@@ -22,9 +30,5 @@ class UserRepositoryImpl(private val userDataSource: LocalDataSource): UserRepos
 
     override suspend fun updateLogInStatus(isLoggedIn: Boolean, email: String) {
         userDataSource.updateUserLogInStatus(isLoggedIn, email)
-    }
-
-    override suspend fun getLoggedInUser(): User? {
-        return userDataSource.getLoggedInUser()
     }
 }

@@ -1,11 +1,12 @@
 package com.example.recipeappiti.auth.register.view
 
 import android.os.Bundle
-import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ScrollView
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -30,6 +31,7 @@ class RegisterFragment : Fragment() {
         )
         RegisterViewModelFactory(userRepository)
     }
+    private lateinit var scrollView: ScrollView
     private lateinit var usernameField: TextInputEditText
     private lateinit var usernameLayout: TextInputLayout
     private lateinit var emailField: TextInputEditText
@@ -55,6 +57,7 @@ class RegisterFragment : Fragment() {
     }
 
     private fun initViews() {
+        scrollView = requireView().findViewById(R.id.registerScrollView)
         usernameField = requireView().findViewById(R.id.usernameField)
         usernameLayout = requireView().findViewById(R.id.usernameLayout)
         emailField = requireView().findViewById(R.id.emailField)
@@ -67,38 +70,32 @@ class RegisterFragment : Fragment() {
     }
 
     private fun initListeners() {
-        usernameField.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) {
+        usernameLayout.editText?.addTextChangedListener(
+            onTextChanged = { _, _, _, _ ->
                 registerViewModel.validateUsername(usernameField.text.toString())
             }
-        }
+        )
 
-//        usernameField.addTextChangedListener(
-//            onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-//                registerViewModel.validateUsername(usernameField.text.toString())
-//            }
-//        )
-
-        emailField.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) {
+        emailLayout.editText?.addTextChangedListener(
+            onTextChanged = { _, _, _, _ ->
                 registerViewModel.validateEmail(emailField.text.toString())
             }
-        }
+        )
 
-        passwordField.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) {
+        passwordLayout.editText?.addTextChangedListener(
+            onTextChanged = { _, _, _, _ ->
                 registerViewModel.validatePassword(passwordField.text.toString())
             }
-        }
+        )
 
-        passwordConfirmField.setOnFocusChangeListener { _, hasFocus ->
-            if (!hasFocus) {
+        passwordConfirmLayout.editText?.addTextChangedListener(
+            onTextChanged = { _, _, _, _ ->
                 registerViewModel.validatePasswordConfirmation(
                     passwordField.text.toString(),
                     passwordConfirmField.text.toString()
                 )
             }
-        }
+        )
 
         signUpButton.setOnClickListener {
             processRegistration(
@@ -111,44 +108,42 @@ class RegisterFragment : Fragment() {
     }
 
     private fun observeValidations() {
-        registerViewModel.usernameMessage.observe(viewLifecycleOwner, Observer { validationResult ->
-            usernameLayout.helperText = when (validationResult) {
+        registerViewModel.usernameMessage.observe(viewLifecycleOwner, Observer { result ->
+            usernameLayout.helperText = when (result) {
                 is ValidateCredentials.Valid -> null
-                is ValidateCredentials.InValid -> validationResult.message
+                is ValidateCredentials.InValid -> result.message
             }
         })
 
-        registerViewModel.emailMessage.observe(viewLifecycleOwner, Observer { validationResult ->
-            emailLayout.helperText = when (validationResult) {
+        registerViewModel.emailMessage.observe(viewLifecycleOwner, Observer { result ->
+            emailLayout.helperText = when (result) {
                 is ValidateCredentials.Valid -> null
-                is ValidateCredentials.InValid -> validationResult.message
+                is ValidateCredentials.InValid -> result.message
             }
         })
 
-        registerViewModel.passwordMessage.observe(viewLifecycleOwner, Observer { validationResult ->
-            passwordLayout.helperText = when (validationResult) {
+        registerViewModel.passwordMessage.observe(viewLifecycleOwner, Observer { result ->
+            passwordLayout.helperText = when (result) {
                 is ValidateCredentials.Valid -> null
-                is ValidateCredentials.InValid -> validationResult.message
+                is ValidateCredentials.InValid -> result.message
             }
         })
 
-        registerViewModel.confirmPasswordMessage.observe(
-            viewLifecycleOwner,
-            Observer { validationResult ->
-                passwordConfirmLayout.helperText = when (validationResult) {
+        registerViewModel.confirmPasswordMessage.observe(viewLifecycleOwner, Observer { result ->
+                passwordConfirmLayout.helperText = when (result) {
                     is ValidateCredentials.Valid -> null
-                    is ValidateCredentials.InValid -> validationResult.message
+                    is ValidateCredentials.InValid -> result.message
                 }
             })
 
-        registerViewModel.registerState.observe(viewLifecycleOwner, Observer { validationResult ->
-            when (validationResult) {
+        registerViewModel.registerState.observe(viewLifecycleOwner, Observer { result ->
+            when (result) {
                  is ValidateCredentials.Valid-> {
                     val navController = findNavController()
                     navController.popBackStack()
                 }
                 is ValidateCredentials.InValid -> {
-                    AlertUtil.showAlert(requireContext(), validationResult.message)
+                    AlertUtil.showAlert(requireContext(), result.message)
                 }
             }
         })
@@ -166,7 +161,7 @@ class RegisterFragment : Fragment() {
             passwordValidation,
             confirmPasswordValidation
         )
-        when (credentialsStatus) {
+        when(credentialsStatus) {
             is ValidateCredentials.Valid-> {
                 val username = usernameField.text.toString()
                 val email = emailField.text.toString()

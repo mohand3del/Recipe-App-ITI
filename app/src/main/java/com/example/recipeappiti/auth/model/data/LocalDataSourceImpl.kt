@@ -13,6 +13,14 @@ class LocalDataSourceImpl(private val userDao: UserDao): LocalDataSource {
         userDao.addUser(user)
     }
 
+    override suspend fun getPassword(email: String): String? {
+        return userDao.getPassword(email)
+    }
+
+    override suspend fun getLoggedInUser(): User? {
+        return userDao.getLoggedInUser()
+    }
+
     override suspend fun getUserCuisines(): List<String>? {
         return userDao.getCuisines()
     }
@@ -24,10 +32,4 @@ class LocalDataSourceImpl(private val userDao: UserDao): LocalDataSource {
     override suspend fun updateUserLogInStatus(isLoggedIn: Boolean, email: String) {
         userDao.updateLogInStatus(email, isLoggedIn)
     }
-
-    override suspend fun getLoggedInUser(): User? {
-        return userDao.getLoggedInUser()
-    }
-
-
 }
