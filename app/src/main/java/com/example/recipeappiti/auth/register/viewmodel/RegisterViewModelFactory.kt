@@ -6,12 +6,11 @@ import com.example.recipeappiti.auth.repository.UserRepository
 import com.example.recipeappiti.home.repository.MealRepository
 
 class RegisterViewModelFactory(
-    private val userRepository: UserRepository,
-    private val recipeMealRepository: MealRepository
+    private val userRepository: UserRepository
 ): ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(RegisterViewModel::class.java)) {
-            return RegisterViewModel(userRepository, recipeMealRepository) as T
+            return RegisterViewModel(userRepository) as T
         } else {
             throw IllegalArgumentException("Unknown ViewModel class")
         }

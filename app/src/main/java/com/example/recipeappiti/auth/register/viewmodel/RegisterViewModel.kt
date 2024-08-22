@@ -15,13 +15,9 @@ import kotlinx.coroutines.launch
 
 class RegisterViewModel(
     private val userRepository: UserRepository,
-    private val recipeRepository: MealRepository
 ) : ViewModel() {
-    private val _registerState = MutableLiveData<Boolean>()
-    val registerState: LiveData<Boolean> get() = _registerState
-
-    private val _cuisines = MutableLiveData<List<Area>>()
-    val cuisines: LiveData<List<Area>> get() = _cuisines
+    private val _registerState = MutableLiveData<ValidateCredentials>()
+    val registerState: LiveData<ValidateCredentials> get() = _registerState
 
     private val _usernameMessage = MutableLiveData<ValidateCredentials>()
     val usernameMessage: LiveData<ValidateCredentials> = _usernameMessage
@@ -35,18 +31,14 @@ class RegisterViewModel(
     private val _confirmPasswordMessage = MutableLiveData<ValidateCredentials>()
     val confirmPasswordMessage: LiveData<ValidateCredentials> = _confirmPasswordMessage
 
-    private val _cuisineMessage = MutableLiveData<ValidateCredentials>()
-    val cuisineMessage: LiveData<ValidateCredentials> = _cuisineMessage
-
     fun registerUser(
         username: String,
         email: String,
         password: String,
-        cuisine: String
     ) {
         val hashedPassword = PasswordUtil.hashPassword(password)
         val createdUser =
-            User(username = username, email = email, password = hashedPassword, cuisine = cuisine)
+            User(username = username, email = email, password = hashedPassword)
         addUser(createdUser)
     }
 
@@ -54,14 +46,7 @@ class RegisterViewModel(
         viewModelScope.launch {
             userRepository.addUser(user)
         }.invokeOnCompletion {
-            _registerState.postValue(true)
-        }
-    }
-
-    fun getCuisines() {
-        viewModelScope.launch {
-            val cuisines = recipeRepository.getAreasOfMeals()
-            _cuisines.postValue(cuisines.meals)
+            _registerState.value = ValidateCredentials.Valid
         }
     }
 
@@ -69,6 +54,7 @@ class RegisterViewModel(
         _usernameMessage.value = when {
             username.isEmpty() -> ValidateCredentials.InValid("Username cannot be empty")
             username.length < 6 -> ValidateCredentials.InValid("Minimum 6 characters long")
+
             else -> ValidateCredentials.Valid
         }
     }
@@ -91,6 +77,7 @@ class RegisterViewModel(
             !password.matches(".*[A-Z].*".toRegex()) -> ValidateCredentials.InValid("Minimum one uppercase letter")
             !password.matches(".*[a-z].*".toRegex()) -> ValidateCredentials.InValid("Minimum one lowercase letter")
             !password.matches(".*[!@#$%^&*()_+].*".toRegex()) -> ValidateCredentials.InValid("Minimum one special character")
+
             else -> ValidateCredentials.Valid
         }
     }
@@ -99,13 +86,7 @@ class RegisterViewModel(
         _confirmPasswordMessage.value = when {
             confirmPassword.isEmpty() -> ValidateCredentials.InValid("Confirmation cannot be empty")
             confirmPassword != password -> ValidateCredentials.InValid("Passwords do not match")
-            else -> ValidateCredentials.Valid
-        }
-    }
 
-    fun validateCuisine(cuisine: String) {
-        _cuisineMessage.value = when {
-            cuisine.isEmpty() -> ValidateCredentials.InValid("Cuisine cannot be empty")
             else -> ValidateCredentials.Valid
         }
     }
@@ -114,13 +95,16 @@ class RegisterViewModel(
         usernameMessage: Boolean,
         emailMessage: Boolean,
         passwordMessage: Boolean,
-        confirmPasswordMessage: Boolean,
-        cuisineMessage: Boolean
-    ): Boolean {
-        return !usernameMessage
-                && !emailMessage
-                && !passwordMessage
-                && !confirmPasswordMessage
-                && !cuisineMessage
+        confirmPasswordMessage: Boolean
+    ): ValidateCredentials {
+        return when {
+            !usernameMessage && !emailMessage && !passwordMessage && !confirmPasswordMessage -> {
+                ValidateCredentials.Valid
+            }
+
+            else -> {
+                ValidateCredentials.InValid("Please fill in all fields")
+            }
+        }
     }
 }
