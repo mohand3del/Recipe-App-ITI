@@ -12,4 +12,6 @@ class LocalDataSourceImpl(private val userDao: UserDao): LocalDataSource {
     override suspend fun addUserToDB(user: User) {
         userDao.addUser(user)
     }
+
+    override suspend fun getCuisine(email: String) = userDao.getCuisine(email)
 }

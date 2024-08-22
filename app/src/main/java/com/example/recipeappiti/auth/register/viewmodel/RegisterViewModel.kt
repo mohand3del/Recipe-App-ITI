@@ -5,18 +5,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipeappiti.auth.model.util.PasswordUtil
 import com.example.recipeappiti.auth.model.ValidateCredentials
-import com.example.recipeappiti.core.model.local.User
+import com.example.recipeappiti.auth.model.util.PasswordUtil
 import com.example.recipeappiti.auth.repository.UserRepository
-import com.example.recipeappiti.core.repository.Repository
-import com.example.recipeappiti.layout.home.model.Area
+import com.example.recipeappiti.core.model.local.User
+import com.example.recipeappiti.home.model.Area
+import com.example.recipeappiti.home.repository.MealRepository
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(
     private val userRepository: UserRepository,
-    private val recipeRepository: Repository
-): ViewModel() {
+    private val recipeRepository: MealRepository
+) : ViewModel() {
     private val _registerState = MutableLiveData<Boolean>()
     val registerState: LiveData<Boolean> get() = _registerState
 
@@ -45,7 +45,8 @@ class RegisterViewModel(
         cuisine: String
     ) {
         val hashedPassword = PasswordUtil.hashPassword(password)
-        val createdUser = User(username = username, email = email, password = hashedPassword, cuisine = cuisine)
+        val createdUser =
+            User(username = username, email = email, password = hashedPassword, cuisine = cuisine)
         addUser(createdUser)
     }
 
@@ -75,7 +76,9 @@ class RegisterViewModel(
     fun validateEmail(email: String) {
         _emailMessage.value = when {
             email.isEmpty() -> ValidateCredentials.InValid("Email cannot be empty")
-            !Patterns.EMAIL_ADDRESS.matcher(email).matches() -> ValidateCredentials.InValid("Invalid email address")
+            !Patterns.EMAIL_ADDRESS.matcher(email)
+                .matches() -> ValidateCredentials.InValid("Invalid email address")
+
             else -> ValidateCredentials.Valid
         }
     }

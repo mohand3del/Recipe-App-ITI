@@ -19,10 +19,10 @@ import com.example.recipeappiti.auth.login.viewmodel.LoginViewModelFactory
 import com.example.recipeappiti.auth.model.util.AlertUtil
 import com.example.recipeappiti.auth.model.ValidateCredentials
 import com.example.recipeappiti.auth.model.data.LocalDataSourceImpl
-import com.example.recipeappiti.auth.repository.UserRepositoryImpl
 import com.example.recipeappiti.core.model.local.User
 import com.example.recipeappiti.core.model.local.UserDatabase
-import com.example.recipeappiti.layout.RecipeActivity
+import com.example.recipeappiti.auth.repository.UserRepositoryImpl
+import com.example.recipeappiti.RecipeActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -137,7 +137,7 @@ class LoginFragment : Fragment() {
         val editPrefs = sharedPreferences.edit()
         user?.id?.let { editPrefs.putInt("user_id", it).apply() }
 
-        val intent = Intent(requireContext(), RecipeActivity::class.java)
+        val intent = Intent(requireContext(), com.example.recipeappiti.RecipeActivity::class.java)
         startActivity(intent)
         requireActivity().finish()
     }

@@ -80,4 +80,9 @@ dependencies {
     // Hashing
     implementation("org.mindrot:jbcrypt:0.4")
 
+    // Shimmer
+    implementation ("com.facebook.shimmer:shimmer:0.5.0")
+
+    // Swiperefreshlayout
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
 }
