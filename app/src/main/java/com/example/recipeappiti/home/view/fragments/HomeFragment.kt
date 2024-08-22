@@ -136,74 +136,74 @@ class HomeFragment : Fragment() {
             }
         }
 
-        viewModel.getCuisine("ibrahim@gmail.com")
+        //viewModel.getCuisine("ibrahim@gmail.com")
 
-        viewModel.userCuisine.observe(viewLifecycleOwner) { response ->
-
-            when (response) {
-                is Response.Loading -> {
-                    shimmerMealByArea.startShimmer()
-                }
-
-                is Response.Success -> {
-
-                    if (response.data != null) {
-                        viewModel.getFilteredMealsByAreas(response.data)
-                        viewModel.filteredMealsByAreas.observe(viewLifecycleOwner) { response ->
-
-                            when (response) {
-                                is Response.Loading -> {
-                                    //shimmerMealByArea.startShimmer()
-                                }
-
-                                is Response.Success -> {
-
-                                    shimmerMealByArea.stopShimmer()
-                                    shimmerMealByArea.visibility = View.GONE
-                                    val adapter = AdapterRVItemMeal(response.data.meals)
-                                    recyclerViewArea.adapter = adapter
-
-                                }
-
-                                is Response.Failure -> {
-
-                                    when (val failureReason = response.reason) {
-                                        is FailureReason.NoInternet -> {
-                                            // Show no internet connection message
-                                        }
-
-                                        is FailureReason.UnknownError -> {
-                                            // Show unknown error message with the error details
-                                            val errorMessage = failureReason.error
-
-                                        }
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        //show null data message
-                    }
-
-                }
-
-                is Response.Failure -> {
-
-                    Toast.makeText(requireContext(), "Error", Toast.LENGTH_LONG).show()
-                    when (val failureReason = response.reason) {
-                        is FailureReason.NoInternet -> {
-                            // Show no internet connection message
-                        }
-
-                        is FailureReason.UnknownError -> {
-                            // Show unknown error message with the error details
-                            val errorMessage = failureReason.error
-
-                        }
-                    }
-                }
-            }
-        }
+//        viewModel.userCuisine.observe(viewLifecycleOwner) { response ->
+//
+//            when (response) {
+//                is Response.Loading -> {
+//                    shimmerMealByArea.startShimmer()
+//                }
+//
+//                is Response.Success -> {
+//
+//                    if (response.data != null) {
+//                        viewModel.getFilteredMealsByAreas(response.data)
+//                        viewModel.filteredMealsByAreas.observe(viewLifecycleOwner) { response ->
+//
+//                            when (response) {
+//                                is Response.Loading -> {
+//                                    //shimmerMealByArea.startShimmer()
+//                                }
+//
+//                                is Response.Success -> {
+//
+//                                    shimmerMealByArea.stopShimmer()
+//                                    shimmerMealByArea.visibility = View.GONE
+//                                    val adapter = AdapterRVItemMeal(response.data.meals)
+//                                    recyclerViewArea.adapter = adapter
+//
+//                                }
+//
+//                                is Response.Failure -> {
+//
+//                                    when (val failureReason = response.reason) {
+//                                        is FailureReason.NoInternet -> {
+//                                            // Show no internet connection message
+//                                        }
+//
+//                                        is FailureReason.UnknownError -> {
+//                                            // Show unknown error message with the error details
+//                                            val errorMessage = failureReason.error
+//
+//                                        }
+//                                    }
+//                                }
+//                            }
+//                        }
+//                    } else {
+//                        //show null data message
+//                    }
+//
+//                }
+//
+//                is Response.Failure -> {
+//
+//                    Toast.makeText(requireContext(), "Error", Toast.LENGTH_LONG).show()
+//                    when (val failureReason = response.reason) {
+//                        is FailureReason.NoInternet -> {
+//                            // Show no internet connection message
+//                        }
+//
+//                        is FailureReason.UnknownError -> {
+//                            // Show unknown error message with the error details
+//                            val errorMessage = failureReason.error
+//
+//                        }
+//                    }
+//                }
+//            }
+//        }
 
         return view
     }
