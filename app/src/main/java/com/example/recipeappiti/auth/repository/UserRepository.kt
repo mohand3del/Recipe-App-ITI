@@ -7,5 +7,11 @@ interface UserRepository {
 
     suspend fun addUser(user: User)
 
-    suspend fun getCuisine(email: String) : String?
+    suspend fun getCuisines(): List<String>?
+
+    suspend fun updateCuisines(cuisines: List<String>)
+
+    suspend fun updateLogInStatus(isLoggedIn: Boolean, email: String)
+
+    suspend fun getLoggedInUser(): User?
 }
