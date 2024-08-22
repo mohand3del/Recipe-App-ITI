@@ -18,4 +18,5 @@
     <color name="secondary20">#FFE1B3</color>
     <color name="rating">#FFAD30</color>
     <color name="warning">#D9534F</color>
+    <color name="gray">#aaa</color>
 </resources>

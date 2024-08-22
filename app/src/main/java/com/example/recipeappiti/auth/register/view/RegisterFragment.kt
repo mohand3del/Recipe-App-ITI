@@ -11,16 +11,16 @@ import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.recipeappiti.R
-import com.example.recipeappiti.auth.model.util.AlertUtil
 import com.example.recipeappiti.auth.model.ValidateCredentials
 import com.example.recipeappiti.auth.model.data.LocalDataSourceImpl
+import com.example.recipeappiti.auth.model.util.AlertUtil
 import com.example.recipeappiti.auth.register.view.adapters.CuisineAdapter
-import com.example.recipeappiti.auth.repository.UserRepositoryImpl
 import com.example.recipeappiti.auth.register.viewmodel.RegisterViewModel
 import com.example.recipeappiti.auth.register.viewmodel.RegisterViewModelFactory
+import com.example.recipeappiti.auth.repository.UserRepositoryImpl
 import com.example.recipeappiti.core.model.local.UserDatabase
-import com.example.recipeappiti.core.repository.RepositoryImpl
-import com.example.recipeappiti.layout.home.data.remote.RemoteGsonDataImpl
+import com.example.recipeappiti.home.data.remote.RemoteGsonDataImpl
+import com.example.recipeappiti.home.repository.MealRepositoryImpl
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -28,9 +28,10 @@ class RegisterFragment : Fragment() {
     private val registerViewModel: RegisterViewModel by viewModels {
         val userRepository = UserRepositoryImpl(
             LocalDataSourceImpl(
-            UserDatabase.getDatabaseInstance(requireContext()).userDao())
+                UserDatabase.getDatabaseInstance(requireContext()).userDao()
+            )
         )
-        val recipeRepository = RepositoryImpl(RemoteGsonDataImpl())
+        val recipeRepository = MealRepositoryImpl(RemoteGsonDataImpl())
         RegisterViewModelFactory(userRepository, recipeRepository)
     }
     private lateinit var usernameField: TextInputEditText
@@ -147,12 +148,14 @@ class RegisterFragment : Fragment() {
             }
         })
 
-        registerViewModel.confirmPasswordMessage.observe(viewLifecycleOwner, Observer { validationResult ->
-            passwordConfirmLayout.helperText = when (validationResult) {
-                is ValidateCredentials.Valid -> null
-                is ValidateCredentials.InValid -> validationResult.message
-            }
-        })
+        registerViewModel.confirmPasswordMessage.observe(
+            viewLifecycleOwner,
+            Observer { validationResult ->
+                passwordConfirmLayout.helperText = when (validationResult) {
+                    is ValidateCredentials.Valid -> null
+                    is ValidateCredentials.InValid -> validationResult.message
+                }
+            })
 
         registerViewModel.cuisineMessage.observe(viewLifecycleOwner, Observer { validationResult ->
             cuisineLayout.helperText = when (validationResult) {

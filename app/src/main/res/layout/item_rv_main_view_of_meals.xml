@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_marginStart="5dp"
+    android:layout_marginEnd="5dp">
+
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/materialCardView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:cardCornerRadius="20dp"
+        app:strokeColor="@color/gray"
+        app:strokeWidth="2dp" >
+
+        <ImageView
+            android:id="@+id/item_image"
+            android:layout_width="220dp"
+            android:layout_height="130dp"
+            android:scaleType="centerCrop"/>
+
+    </com.google.android.material.card.MaterialCardView>
+    
+    <TextView
+        android:id="@+id/item_title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/materialCardView"
+        app:layout_constraintStart_toStartOf="@id/materialCardView"
+        app:layout_constraintEnd_toEndOf="@id/materialCardView"
+        android:gravity="start"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:maxLines="2"
+        android:minLines="2"
+        android:layout_marginTop="10dp"
+        android:textColor="@color/black"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

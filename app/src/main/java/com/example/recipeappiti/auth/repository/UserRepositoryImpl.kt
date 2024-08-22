@@ -12,4 +12,6 @@ class UserRepositoryImpl(private val userDataSource: LocalDataSource): UserRepos
     override suspend fun addUser(user: User) {
         userDataSource.addUserToDB(user)
     }
+
+    override suspend fun getCuisine(email: String) = userDataSource.getCuisine(email)
 }

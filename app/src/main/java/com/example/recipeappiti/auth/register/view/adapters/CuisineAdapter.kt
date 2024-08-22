@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import com.example.recipeappiti.layout.home.model.Area
+import com.example.recipeappiti.home.model.Area
 
 class CuisineAdapter(
-context: Context,
-private var cuisines: MutableList<Area> = mutableListOf(),
-private val resource: Int = android.R.layout.simple_list_item_1,
+    context: Context,
+    private var cuisines: MutableList<Area> = mutableListOf(),
+    private val resource: Int = android.R.layout.simple_list_item_1,
 ) : ArrayAdapter<Area>(context, resource, cuisines) {
 
     override fun getView(position: Int, convertView: View?, parent: ViewGroup): View {

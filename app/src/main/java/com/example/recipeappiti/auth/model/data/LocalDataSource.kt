@@ -6,4 +6,6 @@ interface LocalDataSource {
     suspend fun getUserFromDB(email: String): User?
 
     suspend fun addUserToDB(user: User)
+
+    suspend fun getCuisine(email: String) : String?
 }
