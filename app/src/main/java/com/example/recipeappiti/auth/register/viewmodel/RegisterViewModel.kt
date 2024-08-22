@@ -9,8 +9,6 @@ import com.example.recipeappiti.auth.model.ValidateCredentials
 import com.example.recipeappiti.auth.model.util.PasswordUtil
 import com.example.recipeappiti.auth.repository.UserRepository
 import com.example.recipeappiti.core.model.local.User
-import com.example.recipeappiti.home.model.Area
-import com.example.recipeappiti.home.repository.MealRepository
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(
@@ -92,13 +90,13 @@ class RegisterViewModel(
     }
 
     fun validateCredentials(
-        usernameMessage: Boolean,
-        emailMessage: Boolean,
-        passwordMessage: Boolean,
-        confirmPasswordMessage: Boolean
+        isUsernameValid: Boolean,
+        isEmailValid: Boolean,
+        isPasswordValid: Boolean,
+        isConfirmPasswordValid: Boolean
     ): ValidateCredentials {
         return when {
-            !usernameMessage && !emailMessage && !passwordMessage && !confirmPasswordMessage -> {
+            !isUsernameValid && !isEmailValid && !isPasswordValid && !isConfirmPasswordValid -> {
                 ValidateCredentials.Valid
             }
 
