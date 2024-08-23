@@ -5,6 +5,8 @@ import com.example.recipeappiti.core.model.local.User
 interface LocalDataSource {
     suspend fun addUserToDB(user: User)
 
+    suspend fun getLoggedInUser(): User?
+
     suspend fun deleteLoggedInUser()
 
     suspend fun getPassword(email: String): String?

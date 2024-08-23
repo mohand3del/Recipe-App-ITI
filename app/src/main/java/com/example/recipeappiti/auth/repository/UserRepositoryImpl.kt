@@ -8,6 +8,10 @@ class UserRepositoryImpl(private val userDataSource: LocalDataSource): UserRepos
         userDataSource.addUserToDB(user)
     }
 
+    override suspend fun getLoggedInUser(): User? {
+        return userDataSource.getLoggedInUser()
+    }
+
     override suspend fun deleteLoggedInUser() {
         userDataSource.deleteLoggedInUser()
     }

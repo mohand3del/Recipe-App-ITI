@@ -19,7 +19,7 @@ data class User(
     @ColumnInfo(name = "password")
     val password: String,
     @ColumnInfo(name = "cuisines")
-    val cuisine: List<String> = emptyList(),
+    val cuisines: List<String> = emptyList(),
     @ColumnInfo(name = "isLoggedIn")
     val isLoggedIn : Boolean = false
 )
