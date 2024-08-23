@@ -11,6 +11,9 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addUser(user: User)
 
+    @Query("SELECT * FROM user WHERE isLoggedIn = 1 LIMIT 1")
+    suspend fun getLoggedInUser(): User?
+
     @Query("DELETE FROM user WHERE isLoggedIn = 1")
     suspend fun deleteLoggedInUser()
 

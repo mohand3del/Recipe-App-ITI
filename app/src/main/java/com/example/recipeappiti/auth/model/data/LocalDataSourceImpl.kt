@@ -8,6 +8,10 @@ class LocalDataSourceImpl(private val userDao: UserDao): LocalDataSource {
         userDao.addUser(user)
     }
 
+    override suspend fun getLoggedInUser(): User? {
+        return userDao.getLoggedInUser()
+    }
+
     override suspend fun deleteLoggedInUser() {
         userDao.deleteLoggedInUser()
     }

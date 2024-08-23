@@ -9,22 +9,16 @@ object Converters {
     }
 
     @TypeConverter
-    fun fromStringToArray(value: String?): Array<String> {
-        return value?.split(",")?.toTypedArray() ?: arrayOf()
-    }
-
-    @TypeConverter
-    fun fromArrayToString(array: Array<String>?): String {
-        return array?.joinToString(",") ?: ""
-    }
-
-    @TypeConverter
     fun fromStringToList(value: String?): List<String> {
-        return value?.split(",") ?: emptyList()
+        return if (value.isNullOrEmpty()) {
+            emptyList()
+        } else {
+            value.split(",").map { it.trim() }
+        }
     }
 
     @TypeConverter
     fun fromListToString(list: List<String>?): String {
-        return list?.joinToString(",") ?: ""
+        return list?.filter { it.isNotEmpty() }?.joinToString(",") ?: ""
     }
 }
