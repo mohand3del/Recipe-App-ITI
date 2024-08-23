@@ -16,12 +16,11 @@ class LoginViewModel(private val userRepository: UserRepositoryImpl) : ViewModel
     fun checkUser(email: String, password: String) {
         viewModelScope.launch {
             val foundPassword = userRepository.getPassword(email)
+            when (foundPassword) {
+                null -> _isUserValid.value = ValidateCredentials.InValid("User not found")
 
-            if (foundPassword == null) {
-                _isUserValid.value = ValidateCredentials.InValid("Incorrect Credentials")
-                return@launch
+                else -> validateUser(password, foundPassword, email)
             }
-            validateUser(password, foundPassword, email)
         }
     }
 
@@ -30,7 +29,7 @@ class LoginViewModel(private val userRepository: UserRepositoryImpl) : ViewModel
         when (isPasswordCorrect) {
             true -> {
                 _isUserValid.value = ValidateCredentials.Valid
-                userRepository.updateLogInStatus(true, email)
+                userRepository.logInUser(email)
             }
             false -> {
                 _isUserValid.value = ValidateCredentials.InValid("Incorrect Credentials")

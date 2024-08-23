@@ -1,6 +1,7 @@
 package com.example.recipeappiti.core.model.local
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -10,21 +11,30 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun addUser(user: User)
 
-    @Query("SELECT * FROM user WHERE email = :email LIMIT 1")
-    suspend fun getUser(email: String): User?
+    @Query("DELETE FROM user WHERE isLoggedIn = 1")
+    suspend fun deleteLoggedInUser()
 
     @Query("SELECT password FROM user WHERE email = :email LIMIT 1")
     suspend fun getPassword(email: String): String?
 
-    @Query("SELECT * FROM user WHERE isLoggedIn = 1 LIMIT 1")
-    suspend fun getLoggedInUser(): User?
+    @Query("SELECT isLoggedIn FROM user WHERE isLoggedIn = 1 LIMIT 1")
+    suspend fun findLoggedInUser(): Boolean
 
-    @Query("SELECT cuisine FROM user WHERE isLoggedIn = 1")
-    suspend fun getCuisines(): List<String>?
+    @Query("UPDATE user SET isLoggedIn = 1 WHERE email = :email")
+    suspend fun logInUser(email: String)
 
-    @Query("UPDATE user SET cuisine = :cuisine WHERE isLoggedIn = 1")
-    suspend fun updateCuisines(cuisine: List<String>)
+    @Query("UPDATE user SET isLoggedIn = 0 WHERE isLoggedIn = 1")
+    suspend fun logOutUser()
 
-    @Query("UPDATE user SET isLoggedIn = :isLoggedIn WHERE email = :email")
-    suspend fun updateLogInStatus(email: String, isLoggedIn: Boolean)
+    @Query("SELECT email FROM user WHERE isLoggedIn = 1 LIMIT 1")
+    suspend fun getLoggedInEmail(): String
+
+    @Query("SELECT username FROM user WHERE isLoggedIn = 1 LIMIT 1")
+    suspend fun getLoggedInUsername(): String
+
+    @Query("SELECT cuisines FROM user WHERE isLoggedIn = 1")
+    suspend fun getLoggedInUserCuisines(): List<String>
+
+    @Query("UPDATE user SET cuisines = :cuisine WHERE isLoggedIn = 1")
+    suspend fun updateLoggedInUserCuisines(cuisine: List<String>)
 }

@@ -4,6 +4,11 @@ import androidx.room.TypeConverter
 
 object Converters {
     @TypeConverter
+    fun fromIntToBoolean(value: Int): Boolean {
+        return value == 1
+    }
+
+    @TypeConverter
     fun fromStringToArray(value: String?): Array<String> {
         return value?.split(",")?.toTypedArray() ?: arrayOf()
     }
