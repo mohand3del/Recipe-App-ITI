@@ -15,8 +15,18 @@ interface RemoteMealDataSource {
     suspend fun getRandomMeal(): GsonDataMeal
 
     @GET("filter.php")
-    suspend fun getFilteredMealsByAreas(@Query("a") area: String): GsonDataMeal
+    suspend fun getCuisinesMeals(@Query("a") area: String): GsonDataMeal
+
+    @GET("search.php")
+    suspend fun getMealsBySearch(@Query("s") title: String): GsonDataMeal
 
     @GET("list.php?a=list")
-    suspend fun getAreasOfMeals(): GsonDataArea
+    suspend fun getCuisines(): GsonDataArea
+
+    @GET("filter.php")
+    suspend fun getCategoryMeals(@Query("c") category: String): GsonDataMeal
+
+    @GET("lookup.php")
+    suspend fun getMealById(@Query("i") id: String): GsonDataMeal
+
 }

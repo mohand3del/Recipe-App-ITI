@@ -22,7 +22,7 @@
         tools:layout="@layout/fragment_profile" />
     <fragment
         android:id="@+id/action_search"
-        android:name="com.example.recipeappiti.search.view.SearchFragment"
+        android:name="com.example.recipeappiti.search.view.fragments.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
 </navigation>

@@ -23,7 +23,7 @@
     </fragment>
     <fragment
         android:id="@+id/splashFragment"
-        android:name="com.example.recipeappiti.splash.SplashFragment"
+        android:name="com.example.recipeappiti.splash.view.SplashFragment"
         android:label="fragment_splash"
         tools:layout="@layout/fragment_splash" >
         <action

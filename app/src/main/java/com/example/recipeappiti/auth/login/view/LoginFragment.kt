@@ -14,14 +14,14 @@ import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.findNavController
 import com.example.recipeappiti.R
-import com.example.recipeappiti.RecipeActivity
 import com.example.recipeappiti.auth.login.viewmodel.LoginViewModel
 import com.example.recipeappiti.auth.login.viewmodel.LoginViewModelFactory
-import com.example.recipeappiti.auth.model.util.AlertUtil
 import com.example.recipeappiti.auth.model.ValidateCredentials
 import com.example.recipeappiti.auth.model.data.LocalDataSourceImpl
-import com.example.recipeappiti.core.model.local.UserDatabase
+import com.example.recipeappiti.auth.model.util.AlertUtil
 import com.example.recipeappiti.auth.repository.UserRepositoryImpl
+import com.example.recipeappiti.core.model.local.UserDatabase
+import com.example.recipeappiti.main.view.activities.RecipeActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -38,7 +38,8 @@ class LoginFragment : Fragment() {
     private val loginViewModel: LoginViewModel by viewModels {
         val userRepository = UserRepositoryImpl(
             LocalDataSourceImpl(
-                UserDatabase.getDatabaseInstance(requireContext()).userDao())
+                UserDatabase.getDatabaseInstance(requireContext()).userDao()
+            )
         )
         LoginViewModelFactory(userRepository)
     }
@@ -82,9 +83,12 @@ class LoginFragment : Fragment() {
 
     private fun initObservers() {
         loginViewModel.isUserValid.observe(viewLifecycleOwner, Observer { result ->
-            when(result) {
+            when (result) {
                 is ValidateCredentials.Valid -> navigateToRecipeActivity()
-                is ValidateCredentials.InValid -> AlertUtil.showAlert(requireContext(), result.message)
+                is ValidateCredentials.InValid -> AlertUtil.showAlert(
+                    requireContext(),
+                    result.message
+                )
 
                 null -> null
             }

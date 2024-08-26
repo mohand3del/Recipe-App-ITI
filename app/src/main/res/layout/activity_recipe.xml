@@ -6,7 +6,7 @@
     android:id="@+id/drawer"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".RecipeActivity">
+    tools:context=".main.view.activities.RecipeActivity">
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
@@ -51,6 +51,7 @@
         android:layout_height="match_parent"
         app:menu="@menu/menu_drawer"
         android:layout_gravity="start"
-        android:fitsSystemWindows="true"/>
+        android:fitsSystemWindows="true"
+        app:headerLayout="@layout/header_navigation_drawer"/>
 
 </androidx.drawerlayout.widget.DrawerLayout>
