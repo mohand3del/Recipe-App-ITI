@@ -20,6 +20,10 @@ data class User(
     val password: String,
     @ColumnInfo(name = "cuisines")
     val cuisines: List<String> = emptyList(),
+    @ColumnInfo(name = "favourites")
+    val favourites: List<String> = emptyList(),
+    @ColumnInfo(name = "isSubscribed")
+    val isSubscribed: Boolean = false,
     @ColumnInfo(name = "isLoggedIn")
-    val isLoggedIn : Boolean = false
+    val isLoggedIn: Boolean = false
 )

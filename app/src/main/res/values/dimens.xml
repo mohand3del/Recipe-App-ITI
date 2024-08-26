@@ -1,19 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <dimen name="elevation">14dp</dimen>
-
-    <!-- Define dimensions used for the TextField -->
-    <dimen name="textFieldBorderWidth">1.5dp</dimen>
-    <dimen name="textFieldCornerRadius">10dp</dimen>
-    <dimen name="textFieldHeight">55dp</dimen>
-    <dimen name="textFieldPadding">16dp</dimen> <!-- Adjust padding as needed -->
-
-    <!-- Define dimensions used for the Button -->
-    <dimen name="button_height">45dp</dimen>
-    <dimen name="button_padding_start_end">6dp</dimen>
-    <dimen name="button_padding_top_bottom">6dp</dimen>
-    <dimen name="button_margin_top">0dp</dimen>
-    <dimen name="button_margin_left">0dp</dimen>
-    <dimen name="button_border_radius">10dp</dimen>
-    <dimen name="MarginTop">40dp</dimen>
+    <dimen name="MarginTop">45dp</dimen>
+    <dimen name="cardCornerRadius">16dp</dimen>
+    <dimen name="cardElevation">12dp</dimen>
 </resources>

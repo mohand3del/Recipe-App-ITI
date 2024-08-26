@@ -25,4 +25,14 @@
         android:name="com.example.recipeappiti.search.view.fragments.SearchFragment"
         android:label="fragment_search"
         tools:layout="@layout/fragment_search" />
+    <fragment
+        android:id="@+id/recipeDetailFragment"
+        android:name="com.example.recipeappiti.details.view.RecipeDetailFragment"
+        android:label="fragment_recipe_detail"
+        tools:layout="@layout/fragment_recipe_detail" >
+        <argument
+            android:name="recipeId"
+            app:argType="string"
+            android:defaultValue="52772" />
+    </fragment>
 </navigation>

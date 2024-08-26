@@ -1,7 +1,6 @@
 package com.example.recipeappiti.core.model.local
 
 import androidx.room.Dao
-import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -38,6 +37,15 @@ interface UserDao {
     @Query("SELECT cuisines FROM user WHERE isLoggedIn = 1")
     suspend fun getLoggedInUserCuisines(): List<String>
 
-    @Query("UPDATE user SET cuisines = :cuisine WHERE isLoggedIn = 1")
-    suspend fun updateLoggedInUserCuisines(cuisine: List<String>)
+    @Query("UPDATE user SET cuisines = :cuisines WHERE isLoggedIn = 1")
+    suspend fun updateLoggedInUserCuisines(cuisines: List<String>)
+
+    @Query("UPDATE user SET favourites = :favourites WHERE isLoggedIn = 1")
+    suspend fun updateLoggedInUserFavourites(favourites: List<String>)
+
+    @Query("UPDATE user SET isSubscribed = 1 WHERE isLoggedIn = 1")
+    suspend fun updateSubscriptionState()
+
+    @Query("SELECT isSubscribed FROM user WHERE isLoggedIn = 1")
+    suspend fun checkSubscriptionState(): Boolean
 }

@@ -83,6 +83,9 @@ dependencies {
     // Shimmer
     implementation ("com.facebook.shimmer:shimmer:0.5.0")
 
-    // Swiperefreshlayout
+    // SwipereFreshLayout
     implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    // Youtube Player
+    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0")
 }

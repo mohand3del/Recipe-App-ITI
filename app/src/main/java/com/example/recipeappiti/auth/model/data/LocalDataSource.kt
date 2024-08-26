@@ -24,4 +24,10 @@ interface LocalDataSource {
     suspend fun getUserCuisines(): List<String>
 
     suspend fun updateUserCuisines(cuisines: List<String>)
+
+    suspend fun updateUserFavourites(favourites: List<String>)
+
+    suspend fun updateSubscriptionState()
+
+    suspend fun checkSubscriptionState(): Boolean
 }
