@@ -15,6 +15,7 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeappiti.R
@@ -95,7 +96,6 @@ class HomeFragment : Fragment() {
         searchBar_home.setOnClickListener {
 
 
-
         }
 
         popup.setOnMenuItemClickListener { item: MenuItem ->
@@ -137,7 +137,13 @@ class HomeFragment : Fragment() {
             liveData = viewModel.dataCategories,
             shimmerView = shimmerCategories,
             recyclerView = recyclerViewCategories,
-            adapterFactory = { data -> AdapterRVCategories(data.categories) }
+            adapterFactory = { data ->
+                AdapterRVCategories(data.categories) { name ->
+                    goToSearchCategories(
+                        name
+                    )
+                }
+            }
         ) {}
 
 
@@ -147,7 +153,7 @@ class HomeFragment : Fragment() {
             liveData = viewModel.someRandomMeal,
             shimmerView = shimmerRecommendations,
             recyclerView = recyclerViewRecommendations,
-            adapterFactory = { data -> AdapterRVItemMeal(data) }
+            adapterFactory = { data -> AdapterRVItemMeal(data) { id -> goToDetails(id) } }
         ) {}
 
         viewModel.getSomeRandomMeal(5)
@@ -156,7 +162,7 @@ class HomeFragment : Fragment() {
             liveData = viewModel.someRandomMeal,
             shimmerView = shimmerGold,
             recyclerView = recyclerViewGold,
-            adapterFactory = { data -> AdapterRVItemMeal(data) }
+            adapterFactory = { data -> AdapterRVItemMeal(data) { id -> goToDetails(id) } }
         ) {}
 
         viewModel.getUserCuisines()
@@ -167,7 +173,7 @@ class HomeFragment : Fragment() {
             recyclerView = null,
             adapterFactory = null
         ) { data ->
-            if (data != null && data[0].isNotEmpty()) {
+            if (!data.isNullOrEmpty() && data[0].isNotEmpty()) {
                 homeFavCuisines(data[0])
 
                 data.forEachIndexed { index, item ->
@@ -243,7 +249,7 @@ class HomeFragment : Fragment() {
                 is Response.Success -> {
                     shimmerMealByArea.stopShimmer()
                     shimmerMealByArea.visibility = View.GONE
-                    val adapter = AdapterRVItemMeal(response.data.meals)
+                    val adapter = AdapterRVItemMeal(response.data.meals) { id -> goToDetails(id) }
                     recyclerViewCuisine.adapter = adapter
                 }
 
@@ -342,6 +348,26 @@ class HomeFragment : Fragment() {
             }
 
         }
+
+    }
+
+    private fun goToDetails(id: String) {
+
+        val navController =
+            requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+                ?.findNavController()
+
+        navController?.navigate(HomeFragmentDirections.actionActionHomeToRecipeDetailFragment(id))
+
+    }
+
+    private fun goToSearchCategories(name: String) {
+
+        val navController =
+            requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+                ?.findNavController()
+
+        navController?.navigate(HomeFragmentDirections.actionActionHomeToActionSearch(categoryName = name))
 
     }
 

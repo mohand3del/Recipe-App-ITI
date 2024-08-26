@@ -307,4 +307,5 @@ class RecipeActivity : AppCompatActivity(), OnNavigationItemSelectedListener, On
 
     override fun onActionListener() = drawer.openDrawer(GravityCompat.START)
 
+
 }
