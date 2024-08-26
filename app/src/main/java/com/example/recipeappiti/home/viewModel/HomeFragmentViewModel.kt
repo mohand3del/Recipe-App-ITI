@@ -4,17 +4,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipeappiti.home.model.FailureReason
-import com.example.recipeappiti.home.model.Response
 import com.example.recipeappiti.auth.repository.UserRepository
-import com.example.recipeappiti.home.repository.MealRepository
+import com.example.recipeappiti.home.model.FailureReason
 import com.example.recipeappiti.home.model.GsonDataArea
 import com.example.recipeappiti.home.model.GsonDataCategories
 import com.example.recipeappiti.home.model.GsonDataMeal
 import com.example.recipeappiti.home.model.Meal
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.async
-import kotlinx.coroutines.awaitAll
+import com.example.recipeappiti.home.model.Response
+import com.example.recipeappiti.home.repository.MealRepository
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -45,6 +42,25 @@ class HomeFragmentViewModel(
 
     }
 
+    private val _userCuisines: MutableLiveData<Response<List<String>?>> = MutableLiveData()
+    val userCuisines: LiveData<Response<List<String>?>> get() = _userCuisines
+
+    fun getUserCuisines() {
+
+        applyResponse(_userCuisines) {
+            userRepository.getLoggedInUser()?.cuisines
+        }
+
+    }
+    private var _filteredMealsByAreas: MutableLiveData<Response<GsonDataMeal>> = MutableLiveData()
+    val filteredMealsByAreas: LiveData<Response<GsonDataMeal>> get() = _filteredMealsByAreas
+
+    fun getFilteredMealsByAreas(area: String) {
+        applyResponse(_filteredMealsByAreas) {
+            mealRepository.getCuisinesMeals(area)
+        }
+    }
+
     private val _someRandomMeal = MutableLiveData<Response<MutableList<Meal>>>()
     val someRandomMeal: LiveData<Response<MutableList<Meal>>> get() = _someRandomMeal
 
@@ -56,22 +72,35 @@ class HomeFragmentViewModel(
 
                 val meals = mutableListOf<Meal>()
 
-                val meals2 = mutableListOf<Deferred<Meal>>().apply {
+                val meals2 = mutableListOf<Meal>().apply {
                     repeat(much) {
 
                         add(
-                            async {
 
-                                mealRepository.getRandomDataMeal().meals.first()
-                            }
+
+                            mealRepository.getRandomDataMeal().meals.first()
+
                         )
                     }
                 }
-                meals.addAll(meals2.awaitAll())
+                meals.addAll(meals2)
 
-
-
-
+//                val meals = mutableListOf<Meal>()
+//
+//                val meals2 = mutableListOf<Deferred<Meal>>().apply {
+//                    repeat(much) {
+//
+//                        add(
+//                            async {
+//
+//                                mealRepository.getRandomDataMeal().meals.first()
+//                            }
+//                        )
+//                    }
+//                }
+//                meals.addAll(meals2.awaitAll())
+                //StandaloneCoroutine is cancelling
+                //kotlinx.coroutines.JobCancellationException: StandaloneCoroutine is cancelling; job=StandaloneCoroutine{Cancelling}@f71d6d
 
                 _someRandomMeal.value = Response.Success(meals)
             } catch (e: IOException) { // Example for no internet
@@ -86,33 +115,14 @@ class HomeFragmentViewModel(
         }
     }
 
-    private var _filteredMealsByAreas: MutableLiveData<Response<GsonDataMeal>> = MutableLiveData()
-    val filteredMealsByAreas: LiveData<Response<GsonDataMeal>> get() = _filteredMealsByAreas
-
-    fun getFilteredMealsByAreas(area: String) {
-        applyResponse(_filteredMealsByAreas) {
-            mealRepository.getFilteredMealsByAreas(area)
-        }
-    }
 
     private var _areasOfMeals: MutableLiveData<Response<GsonDataArea>> = MutableLiveData()
     val areasOfMeals: LiveData<Response<GsonDataArea>> get() = _areasOfMeals
 
     fun getAreasOfMeals() {
         applyResponse(_areasOfMeals) {
-            mealRepository.getAreasOfMeals()
+            mealRepository.getCuisines()
         }
-    }
-
-    private var _userCuisine: MutableLiveData<Response<String?>> = MutableLiveData()
-    val userCuisine: LiveData<Response<String?>> get() = _userCuisine
-
-    fun getCuisine(email: List<String>) {
-
-//        applyResponse(_userCuisine) {
-//            userRepository.getCuisines(email)
-//        }
-
     }
 
     private fun <T> applyResponse(

@@ -15,7 +15,7 @@
         android:theme="@style/Theme.RecipeAppITI"
         tools:targetApi="31" >
         <activity
-            android:name=".RecipeActivity"
+            android:name=".main.view.activities.RecipeActivity"
             android:windowSoftInputMode="adjustPan"
             android:exported="false">
         </activity>

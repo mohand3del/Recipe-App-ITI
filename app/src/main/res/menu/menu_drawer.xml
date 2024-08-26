@@ -6,11 +6,45 @@
         android:checkableBehavior="single">
 
         <item
-            android:title="About the creator"
-            app:showAsAction="ifRoom"/>
+            android:id="@+id/action_profile"
+            android:title="Profile"
+            app:showAsAction="ifRoom" />
 
-        <item android:title="Sign out"
-            app:showAsAction="ifRoom"/>
+        <item
+            android:id="@+id/action_settings"
+            android:title="Settings"
+            app:showAsAction="ifRoom" />
+
+        <item
+            android:id="@+id/action_dark_mode"
+            android:title="Dark Mode"
+            app:actionLayout="@layout/switch_layout_drawer"
+            app:showAsAction="ifRoom" />
+
+        <item
+            android:id="@+id/action_security_policies"
+            android:title="Security Policies"
+            app:showAsAction="ifRoom" />
+
+        <item
+            android:id="@+id/action_help_feedback"
+            android:title="Help &amp; Feedback"
+            app:showAsAction="ifRoom" />
+
+        <item
+            android:id="@+id/action_about"
+            android:title="About"
+            app:showAsAction="ifRoom" />
+
+        <item
+            android:id="@+id/action_log_out"
+            android:title="Log Out"
+            app:showAsAction="ifRoom" />
+
+        <item
+            android:id="@+id/action_delete_account"
+            android:title="Delete Account"
+            app:showAsAction="ifRoom" />
 
     </group>
 
