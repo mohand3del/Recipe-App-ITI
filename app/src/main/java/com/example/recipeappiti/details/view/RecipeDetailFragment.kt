@@ -60,7 +60,7 @@ class RecipeDetailFragment : Fragment() {
                 // if the player is in fullscreen, exit fullscreen
                 youtubePlayer.toggleFullscreen()
             } else {
-                //finish()
+                navController.popBackStack()
             }
         }
     }

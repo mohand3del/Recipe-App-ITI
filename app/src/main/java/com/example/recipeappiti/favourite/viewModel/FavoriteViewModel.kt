@@ -4,17 +4,17 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipeappiti.auth.repository.UserRepository
 import com.example.recipeappiti.home.model.Meal
-import com.example.recipeappiti.home.model.getIngredientsWithMeasurements
 import com.example.recipeappiti.home.repository.MealRepository
 import kotlinx.coroutines.launch
 
-class FavoriteViewModel(private val userRepository: UserRepository,private  val mealRepository : MealRepository) : ViewModel() {
+class FavoriteViewModel(
+    private val userRepository: UserRepository,
+    private val mealRepository: MealRepository
+) : ViewModel() {
 
 
-    // private val _favoriteItems = MutableLiveData<List<FavoriteItem>>()
-    //val favoriteItems: LiveData<List<FavoriteItem>> get() = _favoriteItems
-    private val  _favourites = MutableLiveData<MutableList<String>>()
-    val favorites: LiveData<MutableList<String>> get() = _favourites
+    private val _favourites = MutableLiveData<MutableList<String>>()
+
     private val _isFavourite = MutableLiveData<Boolean>()
     val isFavourite: LiveData<Boolean> get() = _isFavourite
 
@@ -29,7 +29,8 @@ class FavoriteViewModel(private val userRepository: UserRepository,private  val 
 
     private fun loadFavoriteItems() {
         viewModelScope.launch {
-            _favourites.value = userRepository.getLoggedInUser()?.favourites?.toMutableList() ?: mutableListOf()
+            _favourites.value =
+                userRepository.getLoggedInUser()?.favourites?.toMutableList() ?: mutableListOf()
         }.invokeOnCompletion {
             getMeals()
         }
@@ -37,12 +38,12 @@ class FavoriteViewModel(private val userRepository: UserRepository,private  val 
 
     private fun getMeals() {
         viewModelScope.launch {
+            val updatedMeals = _recipes.value ?: mutableListOf()
             _favourites.value?.forEach { mealId ->
                 val meal = mealRepository.getMealById(mealId)
-                meal.let {
-                    _recipes.value?.add(it)
-                }
+                updatedMeals.add(meal)
             }
+            _recipes.value = updatedMeals
         }
     }
 

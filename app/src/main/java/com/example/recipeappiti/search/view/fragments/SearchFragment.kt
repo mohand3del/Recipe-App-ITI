@@ -12,6 +12,7 @@ import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
+import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeappiti.R
@@ -32,6 +33,10 @@ class SearchFragment : Fragment() {
     private lateinit var searchBar: EditText
     private lateinit var recyclerviewSearch: RecyclerView
 
+
+    private val data: SearchFragmentArgs by navArgs()
+
+
     private val viewModel: SearchFragmentViewModel by viewModels {
         val remoteGsonDataSource = RemoteGsonDataImpl()
         val mealRepository = MealRepositoryImpl(remoteGsonDataSource)
@@ -41,12 +46,22 @@ class SearchFragment : Fragment() {
     override fun onResume() {
         super.onResume()
 
-        searchBar.requestFocus()
+        val category = data.categoryName
 
-        val inputMethodManager = requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        inputMethodManager.showSoftInput(searchBar, InputMethodManager.SHOW_IMPLICIT)
+        if (category == null) {
+
+            searchBar.requestFocus()
+
+            val inputMethodManager =
+                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+            inputMethodManager.showSoftInput(searchBar, InputMethodManager.SHOW_IMPLICIT)
+
+        } else {
+            categoryMeals(category)
+        }
 
     }
+
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -60,8 +75,8 @@ class SearchFragment : Fragment() {
 
         val filterBtn: MaterialCardView = view.findViewById(R.id.filterBtn)
 
-        val bottomSheetFilters = BottomSheetFilters({data-> cuisinesMeals(data) },
-            {data-> categoryMeals(data) })
+        val bottomSheetFilters = BottomSheetFilters({ data -> cuisinesMeals(data) },
+            { data -> categoryMeals(data) })
 
         filterBtn.setOnClickListener {
 
@@ -91,9 +106,9 @@ class SearchFragment : Fragment() {
 
                 is Response.Success -> {
 
-                    if (response.data.meals.isNullOrEmpty()){
+                    if (response.data.meals.isNullOrEmpty()) {
                         recyclerviewSearch.adapter = null
-                    }else
+                    } else
                         recyclerviewSearch.adapter = AdapterRVSearchMeals(response.data.meals)
 
 

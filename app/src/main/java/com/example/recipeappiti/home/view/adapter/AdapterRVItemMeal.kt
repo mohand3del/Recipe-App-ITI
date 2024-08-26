@@ -10,7 +10,7 @@ import com.bumptech.glide.Glide
 import com.example.recipeappiti.R
 import com.example.recipeappiti.home.model.Meal
 
-class AdapterRVItemMeal(private val meals: List<Meal>) :
+class AdapterRVItemMeal(private val meals: List<Meal>, private val goToDetails: ((id:String) -> Unit)? = null) :
     RecyclerView.Adapter<AdapterRVItemMeal.MealViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealViewHolder {
@@ -21,34 +21,39 @@ class AdapterRVItemMeal(private val meals: List<Meal>) :
 
     override fun onBindViewHolder(holder: MealViewHolder, position: Int) {
         val meal = meals[position]
-        holder.bind(meal)
+
+
+        holder.titleView.text = formatDescription(meal.strMeal)
+
+        Glide.with(holder.itemView.context)
+            .load(meal.strMealThumb)
+            .centerCrop()
+            .into(holder.imageView)
+
+        holder.imageView.setOnClickListener {
+
+            goToDetails?.let { it(meal.idMeal) }
+
+        }
+
+    }
+
+    private fun formatDescription(
+        description: String,
+        maxLength: Int = 50,
+        suffix: String = " ...Show more"
+    ): String {
+        return if (description.length > maxLength) {
+            "${description.substring(0, maxLength)}$suffix"
+        } else {
+            description
+        }
     }
 
     override fun getItemCount(): Int = meals.size
 
     class MealViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val imageView: ImageView = itemView.findViewById(R.id.item_image)
-        private val titleView: TextView = itemView.findViewById(R.id.item_title)
-
-        fun bind(meal: Meal) {
-            titleView.text = formatDescription(meal.strMeal)
-
-            Glide.with(itemView.context)
-                .load(meal.strMealThumb)
-                .centerCrop()
-                .into(imageView)
-        }
-
-        private fun formatDescription(
-            description: String,
-            maxLength: Int = 50,
-            suffix: String = " ...Show more"
-        ): String {
-            return if (description.length > maxLength) {
-                "${description.substring(0, maxLength)}$suffix"
-            } else {
-                description
-            }
-        }
+        val imageView: ImageView = itemView.findViewById(R.id.item_image)
+        val titleView: TextView = itemView.findViewById(R.id.item_title)
     }
 }
