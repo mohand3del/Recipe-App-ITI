@@ -24,4 +24,10 @@ interface UserRepository {
     suspend fun getCuisines(): List<String>
 
     suspend fun updateCuisines(cuisines: List<String>)
+
+    suspend fun updateFavourites(favourites: List<String>)
+
+    suspend fun updateSubscriptionState()
+
+    suspend fun checkSubscriptionState(): Boolean
 }

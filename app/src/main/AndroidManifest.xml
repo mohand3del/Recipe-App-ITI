@@ -17,6 +17,7 @@
         <activity
             android:name=".main.view.activities.RecipeActivity"
             android:windowSoftInputMode="adjustPan"
+            android:configChanges="orientation|screenSize|keyboardHidden|smallestScreenSize|screenLayout"
             android:exported="false">
         </activity>
         <activity
