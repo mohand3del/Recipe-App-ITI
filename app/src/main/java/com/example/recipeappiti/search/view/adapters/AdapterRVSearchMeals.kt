@@ -10,7 +10,10 @@ import com.bumptech.glide.Glide
 import com.example.recipeappiti.R
 import com.example.recipeappiti.home.model.Meal
 
-class AdapterRVSearchMeals(private val meals: List<Meal>) :
+class AdapterRVSearchMeals(
+    private val meals: List<Meal>,
+    private val goToDetails: ((id: String) -> Unit)? = null
+) :
     RecyclerView.Adapter<AdapterRVSearchMeals.MealViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealViewHolder {
@@ -21,34 +24,40 @@ class AdapterRVSearchMeals(private val meals: List<Meal>) :
 
     override fun onBindViewHolder(holder: MealViewHolder, position: Int) {
         val meal = meals[position]
-        holder.bind(meal)
-    }
+        with(holder) {
 
-    override fun getItemCount(): Int = meals.size
-
-    class MealViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        private val imageView: ImageView = itemView.findViewById(R.id.item_image_search)
-        private val titleView: TextView = itemView.findViewById(R.id.item_title_search)
-
-        fun bind(meal: Meal) {
             titleView.text = formatDescription(meal.strMeal)
 
             Glide.with(itemView.context)
                 .load(meal.strMealThumb)
                 .centerCrop()
                 .into(imageView)
-        }
 
-        private fun formatDescription(
-            description: String,
-            maxLength: Int = 50,
-            suffix: String = " ...Show more"
-        ): String {
-            return if (description.length > maxLength) {
-                "${description.substring(0, maxLength)}$suffix"
-            } else {
-                description
+            imageView.setOnClickListener {
+
+                goToDetails?.let { it(meal.idMeal) }
+
             }
+
         }
+    }
+
+    private fun formatDescription(
+        description: String,
+        maxLength: Int = 50,
+        suffix: String = " ...Show more"
+    ): String {
+        return if (description.length > maxLength) {
+            "${description.substring(0, maxLength)}$suffix"
+        } else {
+            description
+        }
+    }
+
+    override fun getItemCount(): Int = meals.size
+
+    class MealViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+        val imageView: ImageView = itemView.findViewById(R.id.item_image_search)
+        val titleView: TextView = itemView.findViewById(R.id.item_title_search)
     }
 }

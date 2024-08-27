@@ -23,7 +23,6 @@ import com.example.recipeappiti.auth.repository.UserRepositoryImpl
 import com.example.recipeappiti.core.model.local.UserDatabase
 import com.example.recipeappiti.home.model.FailureReason
 import com.example.recipeappiti.home.model.Response
-import com.example.recipeappiti.main.view.interfaces.OnActionListener
 import com.example.recipeappiti.main.viewModel.RecipeActivityViewModel
 import com.example.recipeappiti.main.viewModel.RecipeActivityViewModelFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -31,9 +30,9 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 
-class RecipeActivity : AppCompatActivity(), OnNavigationItemSelectedListener, OnActionListener {
+class RecipeActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
 
-    private val viewModel : RecipeActivityViewModel by viewModels {
+    private val viewModel: RecipeActivityViewModel by viewModels {
 
 
         val database = UserDatabase.getDatabaseInstance(this)
@@ -48,9 +47,9 @@ class RecipeActivity : AppCompatActivity(), OnNavigationItemSelectedListener, On
     private lateinit var drawer: DrawerLayout
     private lateinit var navigationView: NavigationView
     private lateinit var toggle: ActionBarDrawerToggle
-    private var headerView : View? = null
-    private lateinit var userName : TextView
-    private lateinit var userEmail : TextView
+    private var headerView: View? = null
+    private lateinit var userName: TextView
+    private lateinit var userEmail: TextView
 
     private var navController: NavController? = null
 
@@ -65,6 +64,12 @@ class RecipeActivity : AppCompatActivity(), OnNavigationItemSelectedListener, On
         }
 
         initUi()
+
+        viewModel.navigateToFragment.observe(this) { fragmentId ->
+            fragmentId?.let {
+                bottomNavigationView.selectedItemId = fragmentId
+            }
+        }
 
         viewModel.getUserName()
 
@@ -154,21 +159,8 @@ class RecipeActivity : AppCompatActivity(), OnNavigationItemSelectedListener, On
         navController =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
 
-        bottomNavItemChangeListener(bottomNavigationView)
-
-        navController?.let {
-            bottomNavigationView.setupWithNavController(it)
-        }
-    }
-
-    private fun bottomNavItemChangeListener(navView: BottomNavigationView) {
-        navView.setOnItemSelectedListener { item ->
-            if (item.itemId != navView.selectedItemId) {
-                navController?.popBackStack(item.itemId, inclusive = true, saveState = false)
-                navController?.navigate(item.itemId)
-            }
-            true
-        }
+        //navigate by its own
+        navController?.let { bottomNavigationView.setupWithNavController(it) }
     }
 
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
@@ -304,8 +296,4 @@ class RecipeActivity : AppCompatActivity(), OnNavigationItemSelectedListener, On
             }
         }
     }
-
-    override fun onActionListener() = drawer.openDrawer(GravityCompat.START)
-
-
 }

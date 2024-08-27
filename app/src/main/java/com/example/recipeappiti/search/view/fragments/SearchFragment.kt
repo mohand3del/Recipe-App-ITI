@@ -10,32 +10,35 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.LiveData
-import androidx.navigation.fragment.navArgs
+import androidx.navigation.NavController
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeappiti.R
+import com.example.recipeappiti.auth.model.data.LocalDataSourceImpl
+import com.example.recipeappiti.auth.repository.UserRepositoryImpl
+import com.example.recipeappiti.core.model.local.UserDatabase
 import com.example.recipeappiti.core.model.util.CreateMaterialAlertDialogBuilder
 import com.example.recipeappiti.home.data.remote.RemoteGsonDataImpl
 import com.example.recipeappiti.home.model.FailureReason
 import com.example.recipeappiti.home.model.Response
 import com.example.recipeappiti.home.repository.MealRepositoryImpl
+import com.example.recipeappiti.main.viewModel.RecipeActivityViewModel
+import com.example.recipeappiti.main.viewModel.RecipeActivityViewModelFactory
 import com.example.recipeappiti.search.view.adapters.AdapterRVSearchMeals
 import com.example.recipeappiti.search.view.bottomSheets.BottomSheetFilters
 import com.example.recipeappiti.search.viewModel.SearchFragmentViewModel
 import com.example.recipeappiti.search.viewModel.SearchFragmentViewModelFactory
-import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.card.MaterialCardView
 
 class SearchFragment : Fragment() {
 
     private lateinit var searchBar: EditText
     private lateinit var recyclerviewSearch: RecyclerView
-
-
-    private val data: SearchFragmentArgs by navArgs()
-
+    private var navController : NavController? = null
+    private lateinit var filterBtn: MaterialCardView
 
     private val viewModel: SearchFragmentViewModel by viewModels {
         val remoteGsonDataSource = RemoteGsonDataImpl()
@@ -43,21 +46,36 @@ class SearchFragment : Fragment() {
         SearchFragmentViewModelFactory(mealRepository)
     }
 
+    private val sharedViewModel: RecipeActivityViewModel by activityViewModels {
+
+        val database = UserDatabase.getDatabaseInstance(requireContext())
+        val userDao = database.userDao()
+        val localDataSource = LocalDataSourceImpl(userDao)
+        val userRepository = UserRepositoryImpl(localDataSource)
+        RecipeActivityViewModelFactory(userRepository)
+
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        sharedViewModel.updateSearchCategory(null)
+        //TODO make recycle view adapter assigned to null
+    }
+
     override fun onResume() {
         super.onResume()
 
-        val category = data.categoryName
+        sharedViewModel.categorySearch.observe(viewLifecycleOwner) { category ->
 
-        if (category == null) {
+            if (category.isNullOrEmpty()) {
+                searchBar.requestFocus()
+                val inputMethodManager =
+                    requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                inputMethodManager.showSoftInput(searchBar, InputMethodManager.SHOW_IMPLICIT)
+            } else {
+                categoryMeals(category)
+            }
 
-            searchBar.requestFocus()
-
-            val inputMethodManager =
-                requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-            inputMethodManager.showSoftInput(searchBar, InputMethodManager.SHOW_IMPLICIT)
-
-        } else {
-            categoryMeals(category)
         }
 
     }
@@ -69,11 +87,7 @@ class SearchFragment : Fragment() {
     ): View? {
         val view = inflater.inflate(R.layout.fragment_search, container, false)
 
-        searchBar = view.findViewById(R.id.searchBar)
-        recyclerviewSearch = view.findViewById(R.id.recyclerviewSearch)
-        recyclerviewSearch.layoutManager = GridLayoutManager(requireContext(), 2)
-
-        val filterBtn: MaterialCardView = view.findViewById(R.id.filterBtn)
+        initViews(view)
 
         val bottomSheetFilters = BottomSheetFilters({ data -> cuisinesMeals(data) },
             { data -> categoryMeals(data) })
@@ -109,39 +123,14 @@ class SearchFragment : Fragment() {
                     if (response.data.meals.isNullOrEmpty()) {
                         recyclerviewSearch.adapter = null
                     } else
-                        recyclerviewSearch.adapter = AdapterRVSearchMeals(response.data.meals)
+                        recyclerviewSearch.adapter = AdapterRVSearchMeals(response.data.meals){
+                            goToDetails(it)
+                        }
 
 
                 }
 
-                is Response.Failure -> {
-                    when (val failureReason = response.reason) {
-                        is FailureReason.NoInternet -> {
-                            // Show no internet connection message
-                            CreateMaterialAlertDialogBuilder.createMaterialAlertDialogBuilderOkCancel(
-                                requireContext(),
-                                title = "No Internet Connection",
-                                message = "Please check your internet connection and try again.",
-                                positiveBtnMsg = "Try again",
-                                negativeBtnMsg = "Cancel"
-                            ) {
-                                //TODO Optionally, define any action to take after the dialog is dismissed
-                            }
-                        }
-
-                        is FailureReason.UnknownError -> {
-                            val errorMessage = failureReason.error
-                            CreateMaterialAlertDialogBuilder.createMaterialAlertDialogBuilderOk(
-                                requireContext(),
-                                title = "Unknown Error",
-                                message = "An unknown error occurred: $errorMessage",
-                                positiveBtnMsg = "OK"
-                            ) {
-
-                            }
-                        }
-                    }
-                }
+                is Response.Failure -> {failureResponse(response)}
             }
 
         }
@@ -149,92 +138,113 @@ class SearchFragment : Fragment() {
         return view
     }
 
+    private fun initViews(view: View) {
+        searchBar = view.findViewById(R.id.searchBar)
+        recyclerviewSearch = view.findViewById(R.id.recyclerviewSearch)
+        recyclerviewSearch.layoutManager = GridLayoutManager(requireContext(), 2)
+        navController =
+            requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+                ?.findNavController()
+
+        filterBtn = view.findViewById(R.id.filterBtn)
+    }
+
     private fun cuisinesMeals(area: String) {
 
-        viewModel.getCuisinesMeals(area)
+        with(viewModel){
 
-        observeResponse(
-            viewModel.cuisineMeals, null, recyclerviewSearch,
+            getCuisinesMeals(area)
 
-            { data -> AdapterRVSearchMeals(data.meals) }, null
-        )
+            categoryMeals.observe(viewLifecycleOwner) { response ->
+
+                when (response) {
+                    is Response.Loading -> {
+
+                    }
+
+                    is Response.Success -> {
+
+                        recyclerviewSearch.visibility = View.VISIBLE
+                        recyclerviewSearch.adapter = AdapterRVSearchMeals(response.data.meals)
+
+                    }
+
+                    is Response.Failure -> {
+                        failureResponse(response)
+                    }
+                }
+
+            }
+
+        }
 
     }
 
     private fun categoryMeals(category: String) {
 
-        viewModel.getCategoryMeals(category)
+        with(viewModel){
 
-        observeResponse(
-            viewModel.categoryMeals, null, recyclerviewSearch,
+            getCategoryMeals(category)
 
-            { data -> AdapterRVSearchMeals(data.meals) }, null
-        )
+            categoryMeals.observe(viewLifecycleOwner) { response ->
 
-    }
-
-    private fun <T> observeResponse(
-        liveData: LiveData<Response<T>>,
-        shimmerView: ShimmerFrameLayout?,
-        recyclerView: RecyclerView?,
-        adapterFactory: ((T) -> RecyclerView.Adapter<*>)?,
-        successFun: ((T) -> Unit)?
-    ) {
-
-        liveData.observe(viewLifecycleOwner) { response ->
-
-            when (response) {
-                is Response.Loading -> {
-                    shimmerView?.startShimmer()
-                }
-
-                is Response.Success -> {
-
-                    if (recyclerView != null && adapterFactory != null) {
-
-                        shimmerView?.stopShimmer()
-                        shimmerView?.visibility = View.GONE
-                        recyclerView.visibility = View.VISIBLE
-                        recyclerView.adapter = adapterFactory(response.data)
+                when (response) {
+                    is Response.Loading -> {
 
                     }
-                    if (successFun != null)
-                        successFun(response.data)
 
+                    is Response.Success -> {
 
-                }
+                        recyclerviewSearch.visibility = View.VISIBLE
+                        recyclerviewSearch.adapter = AdapterRVSearchMeals(response.data.meals)
 
-                is Response.Failure -> {
-                    when (val failureReason = response.reason) {
-                        is FailureReason.NoInternet -> {
-                            // Show no internet connection message
-                            CreateMaterialAlertDialogBuilder.createMaterialAlertDialogBuilderOkCancel(
-                                requireContext(),
-                                title = "No Internet Connection",
-                                message = "Please check your internet connection and try again.",
-                                positiveBtnMsg = "Try again",
-                                negativeBtnMsg = "Cancel"
-                            ) {
-                                //TODO Optionally, define any action to take after the dialog is dismissed
-                            }
-                        }
+                    }
 
-                        is FailureReason.UnknownError -> {
-                            val errorMessage = failureReason.error
-                            CreateMaterialAlertDialogBuilder.createMaterialAlertDialogBuilderOk(
-                                requireContext(),
-                                title = "Unknown Error",
-                                message = "An unknown error occurred: $errorMessage",
-                                positiveBtnMsg = "OK"
-                            ) {
-
-                            }
-                        }
+                    is Response.Failure -> {
+                        failureResponse(response)
                     }
                 }
+
             }
 
         }
+
+    }
+
+    private fun failureResponse(response: Response.Failure) {
+        when (val failureReason = response.reason) {
+            is FailureReason.NoInternet -> {
+                // Show no internet connection message
+                CreateMaterialAlertDialogBuilder.createMaterialAlertDialogBuilderOkCancel(
+                    requireContext(),
+                    title = "No Internet Connection",
+                    message = "Please check your internet connection and try again.",
+                    positiveBtnMsg = "Try again",
+                    negativeBtnMsg = "Cancel"
+                ) {
+                    //TODO Optionally, define any action to take after the dialog is dismissed
+                }
+            }
+
+            is FailureReason.UnknownError -> {
+                val errorMessage = failureReason.error
+                CreateMaterialAlertDialogBuilder.createMaterialAlertDialogBuilderOk(
+                    requireContext(),
+                    title = "Unknown Error",
+                    message = "An unknown error occurred: $errorMessage",
+                    positiveBtnMsg = "OK"
+                ) {
+
+                }
+            }
+        }
+    }
+
+    private fun goToDetails(id: String) {
+
+        sharedViewModel.setItemDetails(id)
+
+        navController?.navigate(R.id.recipeDetailFragment)
 
     }
 
