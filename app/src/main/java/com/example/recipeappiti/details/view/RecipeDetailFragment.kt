@@ -14,6 +14,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -31,6 +32,9 @@ import com.example.recipeappiti.details.viewmodel.DetailsViewModelFactory
 import com.example.recipeappiti.home.data.remote.RemoteGsonDataImpl
 import com.example.recipeappiti.home.model.Meal
 import com.example.recipeappiti.home.repository.MealRepositoryImpl
+import com.example.recipeappiti.main.viewModel.RecipeActivityViewModel
+import com.example.recipeappiti.main.viewModel.RecipeActivityViewModelFactory
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.card.MaterialCardView
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.AbstractYouTubePlayerListener
@@ -42,10 +46,21 @@ class RecipeDetailFragment : Fragment() {
     private val detailsViewModel: DetailsViewModel by viewModels {
         val userRepository = UserRepositoryImpl(
             LocalDataSourceImpl(
-                UserDatabase.getDatabaseInstance(requireContext()).userDao())
+                UserDatabase.getDatabaseInstance(requireContext()).userDao()
+            )
         )
         val mealRepository = MealRepositoryImpl(RemoteGsonDataImpl())
         DetailsViewModelFactory(mealRepository, userRepository)
+    }
+
+    private val sharedViewModel: RecipeActivityViewModel by activityViewModels {
+
+        val database = UserDatabase.getDatabaseInstance(requireContext())
+        val userDao = database.userDao()
+        val localDataSource = LocalDataSourceImpl(userDao)
+        val userRepository = UserRepositoryImpl(localDataSource)
+        RecipeActivityViewModelFactory(userRepository)
+
     }
 
     // Youtube
@@ -80,11 +95,12 @@ class RecipeDetailFragment : Fragment() {
     private lateinit var favouriteImage: ImageView
     private lateinit var ingredientsArrow: ImageView
     private lateinit var instructionsArrow: ImageView
+    private lateinit var bottomNavigationView: BottomNavigationView
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        requireActivity().onBackPressedDispatcher.addCallback(this,onBackPressedCallback)
+        requireActivity().onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
     }
 
     override fun onCreateView(
@@ -98,10 +114,6 @@ class RecipeDetailFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        arguments?.let {
-            recipeId = RecipeDetailFragmentArgs.fromBundle(it).recipeId
-            detailsViewModel.getMealDetails(recipeId)
-        }
         initViews()
         initObservers()
         initListeners()
@@ -117,8 +129,7 @@ class RecipeDetailFragment : Fragment() {
             .build()
         youtubePlayerView.enableAutomaticInitialization = false
         lifecycle.addObserver(youtubePlayerView)
-
-
+        bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation)
         navController = findNavController()
         ingredientsRecycler = requireView().findViewById(R.id.ingredientsRecycler)
         ingredientsAdapter = IngredientsRecyclerViewAdapter()
@@ -133,6 +144,8 @@ class RecipeDetailFragment : Fragment() {
         mealCategory = requireView().findViewById(R.id.mealCategory)
         mealArea = requireView().findViewById(R.id.mealArea)
         instructionsText = requireView().findViewById(R.id.instructionsText)
+
+        bottomNavigationView.visibility = View.GONE
 
     }
 
@@ -153,9 +166,18 @@ class RecipeDetailFragment : Fragment() {
     }
 
     private fun initObservers() {
-        detailsViewModel.recipe.observe(viewLifecycleOwner, Observer { result ->
+
+        sharedViewModel.itemDetails.observe(viewLifecycleOwner){id ->
+
+            recipeId = id
+
+            detailsViewModel.getMealDetails(id)
+
+        }
+
+        detailsViewModel.recipe.observe(viewLifecycleOwner){ result ->
             bindData(result)
-        })
+        }
 
         detailsViewModel.isFavourite.observe(viewLifecycleOwner, Observer { result ->
             favouriteImage.setImageResource(
@@ -198,11 +220,13 @@ class RecipeDetailFragment : Fragment() {
                     requireActivity().window, requireView().findViewById(R.id.rootView)
                 ).apply {
                     hide(WindowInsetsCompat.Type.statusBars())
-                    systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                    systemBarsBehavior =
+                        WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
                 }
 
                 if (requireActivity().requestedOrientation != ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE) {
-                    requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
+                    requireActivity().requestedOrientation =
+                        ActivityInfo.SCREEN_ORIENTATION_SENSOR_LANDSCAPE
                 }
             }
 
@@ -216,23 +240,24 @@ class RecipeDetailFragment : Fragment() {
                     show(WindowInsetsCompat.Type.statusBars())
                 }
                 if (requireActivity().requestedOrientation != ActivityInfo.SCREEN_ORIENTATION_SENSOR) {
-                    requireActivity().requestedOrientation = ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
+                    requireActivity().requestedOrientation =
+                        ActivityInfo.SCREEN_ORIENTATION_SENSOR_PORTRAIT
                 }
             }
 
         })
         youtubePlayerView.enableAutomaticInitialization = false
-        youtubePlayerView.initialize(youtubePlayerListener,iFramePlayerOptions)
+        youtubePlayerView.initialize(youtubePlayerListener, iFramePlayerOptions)
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
         super.onConfigurationChanged(newConfig)
-        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE){
-            if (!isFullscreen){
+        if (newConfig.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            if (!isFullscreen) {
                 youtubePlayer.toggleFullscreen()
             }
-        }else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT){
-            if (isFullscreen){
+        } else if (newConfig.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            if (isFullscreen) {
                 youtubePlayer.toggleFullscreen()
             }
         }
@@ -240,6 +265,7 @@ class RecipeDetailFragment : Fragment() {
 
     override fun onDestroyView() {
         super.onDestroyView()
+        bottomNavigationView.visibility = View.VISIBLE
         youtubePlayerView.release()
     }
 }

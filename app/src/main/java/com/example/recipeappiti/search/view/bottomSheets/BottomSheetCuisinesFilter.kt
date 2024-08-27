@@ -45,8 +45,13 @@ class BottomSheetCuisinesFilter(
 
         viewModel.getCuisines()
 
+
+
         observeResponse(viewModel.cuisines, null, recyclerView,
             { data ->
+
+                data.meals.map { it.strArea }
+
                 AdapterRVCuisinesFilters(data.meals) { data ->
                     doFilter(
                         data

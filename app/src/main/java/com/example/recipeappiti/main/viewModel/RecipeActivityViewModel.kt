@@ -17,6 +17,31 @@ class RecipeActivityViewModel(
 ) : ViewModel() {
 
 
+    private val _navigateToFragment = MutableLiveData<Int>()
+    val navigateToFragment: LiveData<Int> get() = _navigateToFragment
+
+    fun navigateTo(fragmentName: Int) {
+        _navigateToFragment.value = fragmentName
+    }
+
+    private val _categorySearch = MutableLiveData<String?>()
+    val categorySearch: LiveData<String?> get() = _categorySearch
+
+    fun updateSearchCategory(category: String?) {
+        _categorySearch.value = category
+    }
+
+    private val _itemDetails = MutableLiveData<String>()
+    val itemDetails: LiveData<String> get() = _itemDetails
+
+    fun setItemDetails(id: String) {
+        _itemDetails.value = id
+    }
+
+    init {
+        _categorySearch.value = null
+    }
+
     private val _deletedAccount = MutableLiveData<Response<Unit>>()
     val deletedAccount: LiveData<Response<Unit>> get() = _deletedAccount
 

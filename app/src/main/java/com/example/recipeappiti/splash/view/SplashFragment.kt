@@ -64,7 +64,6 @@ class SplashFragment : Fragment() {
                             findNavController().navigate(R.id.action_splashFragment_to_loginFragment)
                         }
                     }, 3000)
-
                 }
 
                 is Response.Failure -> {

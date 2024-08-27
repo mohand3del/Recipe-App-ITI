@@ -14,14 +14,7 @@
         android:id="@+id/action_home"
         android:name="com.example.recipeappiti.home.view.fragments.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" >
-        <action
-            android:id="@+id/action_action_home_to_recipeDetailFragment"
-            app:destination="@id/recipeDetailFragment" />
-        <action
-            android:id="@+id/action_action_home_to_action_search"
-            app:destination="@id/action_search" />
-    </fragment>
+        tools:layout="@layout/fragment_home"/>
     <fragment
         android:id="@+id/action_profile"
         android:name="com.example.recipeappiti.profile.view.ProfileFragment"
@@ -33,23 +26,10 @@
         android:label="fragment_search"
         tools:layout="@layout/fragment_search">
 
-        <argument
-            android:name="categoryName"
-            app:argType="string"
-            app:nullable="true" />
-        <action
-            android:id="@+id/action_action_search_to_action_home"
-            app:destination="@id/action_home" />
-
     </fragment>
     <fragment
         android:id="@+id/recipeDetailFragment"
         android:name="com.example.recipeappiti.details.view.RecipeDetailFragment"
         android:label="fragment_recipe_detail"
-        tools:layout="@layout/fragment_recipe_detail" >
-        <argument
-            android:name="recipeId"
-            app:argType="string"
-            android:defaultValue="52772" />
-    </fragment>
+        tools:layout="@layout/fragment_recipe_detail"/>
 </navigation>
