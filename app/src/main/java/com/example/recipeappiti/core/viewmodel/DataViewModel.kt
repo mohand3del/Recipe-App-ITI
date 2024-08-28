@@ -17,6 +17,9 @@ class DataViewModel(
     private val _categorySearch = MutableLiveData<String?>()
     val categorySearch: LiveData<String?> get() = _categorySearch
 
+    private val _mainCuisine = MutableLiveData<String?>()
+    val mainCuisine: LiveData<String?> get() = _mainCuisine
+
     private val _itemDetails = MutableLiveData<String>()
     val itemDetails: LiveData<String> get() = _itemDetails
 
@@ -31,6 +34,7 @@ class DataViewModel(
 
     init {
         _categorySearch.value = null
+        _mainCuisine.value = null
         loadFavoriteItems()
     }
 
@@ -56,7 +60,7 @@ class DataViewModel(
 
     suspend fun changeFavouriteState(recipeId: String, isChange: Boolean) {
         var currentFavouriteState = _favouritesList.value?.contains(recipeId)
-        if(isChange) {
+        if (isChange) {
             if (currentFavouriteState == true) {
                 _favouritesList.value?.remove(recipeId)
                 currentFavouriteState = false
@@ -64,7 +68,9 @@ class DataViewModel(
                 _favouritesList.value?.add(recipeId)
                 currentFavouriteState = true
             }
-            userRepository.updateFavourites(_favouritesList.value?.toMutableList() ?: mutableListOf())
+            userRepository.updateFavourites(
+                _favouritesList.value?.toMutableList() ?: mutableListOf()
+            )
             getMeals()
         }
         _isFavourite.value = currentFavouriteState ?: false
@@ -72,6 +78,10 @@ class DataViewModel(
 
     fun updateSearchCategory(category: String?) {
         _categorySearch.value = category
+    }
+
+    fun updateMainCuisine(cuisine: String?) {
+        _mainCuisine.value = cuisine
     }
 
     fun setItemDetails(id: String) {

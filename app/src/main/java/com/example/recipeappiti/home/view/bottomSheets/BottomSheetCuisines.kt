@@ -5,17 +5,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeappiti.R
-import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
 import com.example.recipeappiti.core.model.local.repository.UserRepositoryImpl
+import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
 import com.example.recipeappiti.core.model.local.source.UserDatabase
-import com.example.recipeappiti.core.model.remote.source.RemoteGsonDataImpl
-import com.example.recipeappiti.core.model.remote.FailureReason
 import com.example.recipeappiti.core.model.remote.Response
 import com.example.recipeappiti.core.model.remote.repository.MealRepositoryImpl
+import com.example.recipeappiti.core.model.remote.source.RemoteGsonDataImpl
+import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder.createFailureResponse
+import com.example.recipeappiti.core.viewmodel.DataViewModel
+import com.example.recipeappiti.core.viewmodel.DataViewModelFactory
 import com.example.recipeappiti.home.view.adapter.AdapterRVCuisines
 import com.example.recipeappiti.home.viewModel.BottomSheetCuisinesViewModel
 import com.example.recipeappiti.home.viewModel.BottomSheetCuisinesViewModelFactory
@@ -35,6 +38,16 @@ class BottomSheetCuisines : BottomSheetDialogFragment() {
         val userRepository = UserRepositoryImpl(localDataSource)
         BottomSheetCuisinesViewModelFactory(userRepository, mealRepository)
 
+    }
+
+    private val dataViewModel: DataViewModel by activityViewModels {
+        val userRepository = UserRepositoryImpl(
+            LocalDataSourceImpl(
+                UserDatabase.getDatabaseInstance(requireContext()).userDao()
+            )
+        )
+        val mealRepository = MealRepositoryImpl(RemoteGsonDataImpl())
+        DataViewModelFactory(userRepository, mealRepository)
     }
 
     override fun onCreateView(
@@ -60,7 +73,11 @@ class BottomSheetCuisines : BottomSheetDialogFragment() {
 
                 is Response.Success -> {
 
-                    val adapter = AdapterRVCuisines(response.data.meals)
+                    val adapter = AdapterRVCuisines(response.data.meals){lastCuisine ->
+
+                        dataViewModel.updateMainCuisine(lastCuisine)
+
+                    }
                     recyclerviewCuisines.adapter = adapter
 
                     btnDone.setOnClickListener {
@@ -77,40 +94,22 @@ class BottomSheetCuisines : BottomSheetDialogFragment() {
 
                                 is Response.Success -> {
 
+
+
                                     dismiss()
-
                                 }
 
-                                is Response.Failure -> {
-
-                                }
+                                is Response.Failure -> {}
                             }
-
                         }
-
-
                     }
-
                 }
 
                 is Response.Failure -> {
-
-                    when (val failureReason = response.reason) {
-                        is FailureReason.NoInternet -> {
-                            // Show no internet connection message
-                        }
-
-                        is FailureReason.UnknownError -> {
-                            // Show unknown error message with the error details
-                            val errorMessage = failureReason.error
-
-                        }
-                    }
+                    createFailureResponse(response, requireContext())
                 }
             }
         }
-
-
 
         return view
     }

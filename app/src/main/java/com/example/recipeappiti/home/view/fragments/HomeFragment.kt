@@ -21,14 +21,14 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeappiti.R
-import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
 import com.example.recipeappiti.core.model.local.repository.UserRepositoryImpl
+import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
 import com.example.recipeappiti.core.model.local.source.UserDatabase
-import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder
-import com.example.recipeappiti.core.model.remote.source.RemoteGsonDataImpl
-import com.example.recipeappiti.core.model.remote.FailureReason
 import com.example.recipeappiti.core.model.remote.Response
 import com.example.recipeappiti.core.model.remote.repository.MealRepositoryImpl
+import com.example.recipeappiti.core.model.remote.source.RemoteGsonDataImpl
+import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder
+import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder.createFailureResponse
 import com.example.recipeappiti.core.viewmodel.DataViewModel
 import com.example.recipeappiti.core.viewmodel.DataViewModelFactory
 import com.example.recipeappiti.home.view.adapter.AdapterRVCategories
@@ -81,7 +81,7 @@ class HomeFragment : Fragment() {
     private lateinit var recyclerViewCuisine: RecyclerView
     private lateinit var shimmerCategories: ShimmerFrameLayout
     private lateinit var shimmerRecommendations: ShimmerFrameLayout
-    private lateinit var shimmerMealByArea: ShimmerFrameLayout
+    private lateinit var shimmerCuisine: ShimmerFrameLayout
     private lateinit var btnDrawer: ImageView
     private lateinit var textViewCuisines: TextView
     private lateinit var constraintLayoutGold: ConstraintLayout
@@ -91,10 +91,11 @@ class HomeFragment : Fragment() {
     private lateinit var btnFreeTrial: Button
     private lateinit var btnCuisines: MaterialCardView
     private lateinit var popup: PopupMenu
-    private lateinit var searchBar_home: EditText
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var drawer: DrawerLayout
-    private var navController : NavController? = null
+    private lateinit var searchBarHome: TextView
+
+    private var navController: NavController? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -107,15 +108,17 @@ class HomeFragment : Fragment() {
 
         initUi()
 
-        searchBar_home.setOnClickListener {
-
-        }
-
         popup.setOnMenuItemClickListener { item: MenuItem ->
 
             homeFavCuisines(item.title.toString())
 
             true
+        }
+
+        searchBarHome.setOnClickListener {
+
+            recipeViewModel.navigateTo(R.id.action_search)
+
         }
 
         btnFreeTrial.setOnClickListener {
@@ -145,6 +148,16 @@ class HomeFragment : Fragment() {
 
     private fun initUi() {
 
+        with(dataViewModel) {
+
+            mainCuisine.observe(viewLifecycleOwner) { mainCuisine ->
+
+                mainCuisine?.let { homeFavCuisines(it) }
+
+            }
+
+        }
+
         with(viewModel) {
 
             getCategories()
@@ -159,12 +172,16 @@ class HomeFragment : Fragment() {
                         shimmerCategories.stopShimmer()
                         shimmerCategories.visibility = View.GONE
                         val adapter =
-                            AdapterRVCategories(response.data.categories) { name -> goToSearchCategories(name) }
+                            AdapterRVCategories(response.data.categories) { name ->
+                                goToSearchCategories(
+                                    name
+                                )
+                            }
                         recyclerViewCategories.adapter = adapter
                     }
 
                     is Response.Failure -> {
-                        failureResponse(response)
+                        createFailureResponse(response, requireContext())
                     }
                 }
 
@@ -189,7 +206,7 @@ class HomeFragment : Fragment() {
                     }
 
                     is Response.Failure -> {
-                        failureResponse(response)
+                        createFailureResponse(response, requireContext())
                     }
                 }
 
@@ -210,11 +227,11 @@ class HomeFragment : Fragment() {
                         shimmerGold.stopShimmer()
                         shimmerGold.visibility = View.GONE
                         val adapter = AdapterRVItemMeal(response.data) { id -> goToDetails(id) }
-                        recyclerViewCuisine.adapter = adapter
+                        recyclerViewGold.adapter = adapter
                     }
 
                     is Response.Failure -> {
-                        failureResponse(response)
+                        createFailureResponse(response, requireContext())
                     }
                 }
 
@@ -229,14 +246,19 @@ class HomeFragment : Fragment() {
 
                 when (response) {
                     is Response.Loading -> {
-                        shimmerMealByArea.startShimmer()
+                        shimmerCuisine.startShimmer()
                     }
 
                     is Response.Success -> {
                         val data = response.data
 
                         if (!data.isNullOrEmpty() && data[0].isNotEmpty()) {
-                            homeFavCuisines(data[0])
+
+                            popup.menu.clear()
+
+                            with(dataViewModel) {
+                                updateMainCuisine(data[0])
+                            }
 
                             data.forEachIndexed { index, item ->
                                 popup.menu.add(0, index, 0, item)
@@ -248,12 +270,12 @@ class HomeFragment : Fragment() {
                                 requireActivity().supportFragmentManager,
                                 BottomSheetCuisines.TAG
                             )
-                            //TODO refresh after choose cuisines
+
                         }
                     }
 
                     is Response.Failure -> {
-                        failureResponse(response)
+                        createFailureResponse(response, requireContext())
                     }
                 }
 
@@ -270,7 +292,7 @@ class HomeFragment : Fragment() {
 
         shimmerCategories = view.findViewById(R.id.shimmer_categories)
         shimmerRecommendations = view.findViewById(R.id.shimmer_recommendations)
-        shimmerMealByArea = view.findViewById(R.id.shimmer_meal_by_fav_cuisine)
+        shimmerCuisine = view.findViewById(R.id.shimmer_meal_by_fav_cuisine)
         shimmerGold = view.findViewById(R.id.shimmerGold)
 
         constraintLayoutGold = view.findViewById(R.id.constraintlayoutGold)
@@ -281,8 +303,6 @@ class HomeFragment : Fragment() {
         btnDrawer = view.findViewById(R.id.btnHomeDrawer)
 
         textViewCuisines = view.findViewById(R.id.textViewCuisines)
-
-        searchBar_home = view.findViewById(R.id.searchBar_home)
 
         recyclerViewCategories.layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
@@ -298,6 +318,7 @@ class HomeFragment : Fragment() {
         popup = PopupMenu(requireContext(), btnCuisines)
 
         drawer = requireActivity().findViewById(R.id.drawer)
+        searchBarHome = view.findViewById(R.id.searchBar_home)
 
         bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation)
 
@@ -307,7 +328,9 @@ class HomeFragment : Fragment() {
 
         }
 
-        navController =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
+        navController =
+            requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+                ?.findNavController()
     }
 
     private fun homeFavCuisines(
@@ -320,48 +343,18 @@ class HomeFragment : Fragment() {
         viewModel.filteredMealsByAreas.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Response.Loading -> {
-                    shimmerMealByArea.startShimmer()
+                    shimmerCuisine.startShimmer()
                 }
 
                 is Response.Success -> {
-                    shimmerMealByArea.stopShimmer()
-                    shimmerMealByArea.visibility = View.GONE
+                    shimmerCuisine.stopShimmer()
+                    shimmerCuisine.visibility = View.GONE
                     val adapter = AdapterRVItemMeal(response.data.meals) { id -> goToDetails(id) }
                     recyclerViewCuisine.adapter = adapter
                 }
 
                 is Response.Failure -> {
-                    failureResponse(response)
-                }
-            }
-        }
-    }
-
-
-    private fun failureResponse(response: Response.Failure) {
-        when (val failureReason = response.reason) {
-            is FailureReason.NoInternet -> {
-                // Show no internet connection message
-                CreateMaterialAlertDialogBuilder.createMaterialAlertDialogBuilderOkCancel(
-                    requireContext(),
-                    title = "No Internet Connection",
-                    message = "Please check your internet connection and try again.",
-                    positiveBtnMsg = "Try again",
-                    negativeBtnMsg = "Cancel"
-                ) {
-                    //TODO Optionally, define any action to take after the dialog is dismissed
-                }
-            }
-
-            is FailureReason.UnknownError -> {
-                val errorMessage = failureReason.error
-                CreateMaterialAlertDialogBuilder.createMaterialAlertDialogBuilderOk(
-                    requireContext(),
-                    title = "Unknown Error",
-                    message = "An unknown error occurred: $errorMessage",
-                    positiveBtnMsg = "OK"
-                ) {
-
+                    createFailureResponse(response, requireContext())
                 }
             }
         }
