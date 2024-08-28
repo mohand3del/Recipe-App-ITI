@@ -36,6 +36,15 @@ class DataViewModel(
     private val _cuisinesData = MutableLiveData<List<String>>()
     val cuisinesData: LiveData<List<String>> get() = _cuisinesData
 
+
+    init {
+        _categorySearch.value = null
+        _mainCuisine.value = null
+        loadFavoriteItems()
+
+
+    }
+
     fun setCuisines(cuisines: List<String>) {
 
         _cuisinesData.value = cuisines
@@ -45,13 +54,6 @@ class DataViewModel(
             userRepository.updateCuisines(cuisines)
 
         }
-
-    }
-
-    init {
-        _categorySearch.value = null
-        _mainCuisine.value = null
-        loadFavoriteItems()
     }
 
     private fun loadFavoriteItems() {

@@ -258,9 +258,12 @@ class HomeFragment : Fragment() {
 
                             popup.menu.clear()
 
+
                             with(dataViewModel) {
 
                                 updateMainCuisine(data[0])
+
+                                setCuisines(data)
 
                             }
 
