@@ -11,20 +11,22 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeappiti.R
-import com.example.recipeappiti.auth.model.data.LocalDataSourceImpl
-import com.example.recipeappiti.auth.repository.UserRepositoryImpl
-import com.example.recipeappiti.core.model.local.UserDatabase
-import com.example.recipeappiti.core.model.util.CreateMaterialAlertDialogBuilder
-import com.example.recipeappiti.home.data.remote.RemoteGsonDataImpl
-import com.example.recipeappiti.home.model.FailureReason
-import com.example.recipeappiti.home.model.Response
-import com.example.recipeappiti.home.repository.MealRepositoryImpl
+import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
+import com.example.recipeappiti.core.model.local.repository.UserRepositoryImpl
+import com.example.recipeappiti.core.model.local.source.UserDatabase
+import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder
+import com.example.recipeappiti.core.model.remote.source.RemoteGsonDataImpl
+import com.example.recipeappiti.core.model.remote.FailureReason
+import com.example.recipeappiti.core.model.remote.Response
+import com.example.recipeappiti.core.model.remote.repository.MealRepositoryImpl
+import com.example.recipeappiti.core.viewmodel.DataViewModel
+import com.example.recipeappiti.core.viewmodel.DataViewModelFactory
 import com.example.recipeappiti.main.viewModel.RecipeActivityViewModel
 import com.example.recipeappiti.main.viewModel.RecipeActivityViewModelFactory
 import com.example.recipeappiti.search.view.adapters.AdapterRVSearchMeals
@@ -32,6 +34,7 @@ import com.example.recipeappiti.search.view.bottomSheets.BottomSheetFilters
 import com.example.recipeappiti.search.viewModel.SearchFragmentViewModel
 import com.example.recipeappiti.search.viewModel.SearchFragmentViewModelFactory
 import com.google.android.material.card.MaterialCardView
+import kotlinx.coroutines.launch
 
 class SearchFragment : Fragment() {
 
@@ -39,33 +42,35 @@ class SearchFragment : Fragment() {
     private lateinit var recyclerviewSearch: RecyclerView
     private var navController : NavController? = null
     private lateinit var filterBtn: MaterialCardView
+    private var favouriteState: Boolean? = null
 
-    private val viewModel: SearchFragmentViewModel by viewModels {
+    private val viewModel: SearchFragmentViewModel by activityViewModels {
         val remoteGsonDataSource = RemoteGsonDataImpl()
         val mealRepository = MealRepositoryImpl(remoteGsonDataSource)
         SearchFragmentViewModelFactory(mealRepository)
     }
 
-    private val sharedViewModel: RecipeActivityViewModel by activityViewModels {
-
-        val database = UserDatabase.getDatabaseInstance(requireContext())
-        val userDao = database.userDao()
-        val localDataSource = LocalDataSourceImpl(userDao)
-        val userRepository = UserRepositoryImpl(localDataSource)
-        RecipeActivityViewModelFactory(userRepository)
-
+    private val dataViewModel: DataViewModel by activityViewModels {
+        val userRepository = UserRepositoryImpl(
+            LocalDataSourceImpl(
+                UserDatabase.getDatabaseInstance(requireContext()).userDao()
+            )
+        )
+        val mealRepository = MealRepositoryImpl(RemoteGsonDataImpl())
+        DataViewModelFactory(userRepository, mealRepository)
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        sharedViewModel.updateSearchCategory(null)
-        //TODO make recycle view adapter assigned to null
+        dataViewModel.updateSearchCategory(null)
+        viewModel.updateCuisine(null)
+        viewModel.updateCategory(null)
     }
 
     override fun onResume() {
         super.onResume()
 
-        sharedViewModel.categorySearch.observe(viewLifecycleOwner) { category ->
+        dataViewModel.categorySearch.observe(viewLifecycleOwner) { category ->
 
             if (category.isNullOrEmpty()) {
                 searchBar.requestFocus()
@@ -88,9 +93,9 @@ class SearchFragment : Fragment() {
         val view = inflater.inflate(R.layout.fragment_search, container, false)
 
         initViews(view)
+        initObservers()
 
-        val bottomSheetFilters = BottomSheetFilters({ data -> cuisinesMeals(data) },
-            { data -> categoryMeals(data) })
+        val bottomSheetFilters = BottomSheetFilters()
 
         filterBtn.setOnClickListener {
 
@@ -122,12 +127,16 @@ class SearchFragment : Fragment() {
 
                     if (response.data.meals.isNullOrEmpty()) {
                         recyclerviewSearch.adapter = null
-                    } else
-                        recyclerviewSearch.adapter = AdapterRVSearchMeals(response.data.meals){
-                            goToDetails(it)
-                        }
+                    } else {
+                        recyclerviewSearch.adapter = AdapterRVSearchMeals(
+                            response.data.meals,
+                            { id -> goToDetails(id) },
+                            { id, isChange, onComplete ->
+                                changeFavouriteState(id, isChange, onComplete)
+                            }
+                        )
 
-
+                    }
                 }
 
                 is Response.Failure -> {failureResponse(response)}
@@ -136,6 +145,20 @@ class SearchFragment : Fragment() {
         }
 
         return view
+    }
+
+    private fun initObservers() {
+        viewModel.chosenCuisine.observe(viewLifecycleOwner) { chosenCuisine ->
+            chosenCuisine?.let { cuisinesMeals(it) }
+        }
+
+        viewModel.chosenCategory.observe(viewLifecycleOwner) { chosenCategory ->
+            chosenCategory?.let { categoryMeals(it) }
+        }
+
+        dataViewModel.isFavourite.observe(viewLifecycleOwner) { isFavourite ->
+            favouriteState = isFavourite
+        }
     }
 
     private fun initViews(view: View) {
@@ -155,7 +178,7 @@ class SearchFragment : Fragment() {
 
             getCuisinesMeals(area)
 
-            categoryMeals.observe(viewLifecycleOwner) { response ->
+            cuisineMeals.observe(viewLifecycleOwner) { response ->
 
                 when (response) {
                     is Response.Loading -> {
@@ -165,7 +188,13 @@ class SearchFragment : Fragment() {
                     is Response.Success -> {
 
                         recyclerviewSearch.visibility = View.VISIBLE
-                        recyclerviewSearch.adapter = AdapterRVSearchMeals(response.data.meals)
+                        recyclerviewSearch.adapter = AdapterRVSearchMeals(
+                            response.data.meals,
+                            { id -> goToDetails(id) },
+                            { id, isChange, onComplete ->
+                                changeFavouriteState(id, isChange, onComplete)
+                            }
+                        )
 
                     }
 
@@ -196,7 +225,13 @@ class SearchFragment : Fragment() {
                     is Response.Success -> {
 
                         recyclerviewSearch.visibility = View.VISIBLE
-                        recyclerviewSearch.adapter = AdapterRVSearchMeals(response.data.meals)
+                        recyclerviewSearch.adapter = AdapterRVSearchMeals(
+                            response.data.meals,
+                            { id -> goToDetails(id) },
+                            { id, isChange, onComplete ->
+                                changeFavouriteState(id, isChange, onComplete)
+                            }
+                        )
 
                     }
 
@@ -241,11 +276,21 @@ class SearchFragment : Fragment() {
     }
 
     private fun goToDetails(id: String) {
-
-        sharedViewModel.setItemDetails(id)
+        dataViewModel.setItemDetails(id)
 
         navController?.navigate(R.id.recipeDetailFragment)
+    }
 
+    private fun changeFavouriteState(
+        recipeId: String,
+        isChange: Boolean,
+        onComplete: (Boolean) -> Unit
+    ) {
+        dataViewModel.viewModelScope.launch {
+            dataViewModel.changeFavouriteState(recipeId, isChange)
+        }.invokeOnCompletion {
+            favouriteState?.let { state -> onComplete(state) }
+        }
     }
 
 }

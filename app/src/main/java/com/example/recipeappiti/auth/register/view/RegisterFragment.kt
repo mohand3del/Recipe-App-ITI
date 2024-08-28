@@ -13,12 +13,12 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.recipeappiti.R
 import com.example.recipeappiti.auth.model.ValidateCredentials
-import com.example.recipeappiti.auth.model.data.LocalDataSourceImpl
-import com.example.recipeappiti.auth.model.util.AlertUtil
+import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
+import com.example.recipeappiti.core.util.AlertUtil
 import com.example.recipeappiti.auth.register.viewmodel.RegisterViewModel
 import com.example.recipeappiti.auth.register.viewmodel.RegisterViewModelFactory
-import com.example.recipeappiti.auth.repository.UserRepositoryImpl
-import com.example.recipeappiti.core.model.local.UserDatabase
+import com.example.recipeappiti.core.model.local.repository.UserRepositoryImpl
+import com.example.recipeappiti.core.model.local.source.UserDatabase
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 

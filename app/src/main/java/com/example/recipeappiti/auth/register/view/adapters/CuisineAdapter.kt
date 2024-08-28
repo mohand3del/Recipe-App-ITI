@@ -6,7 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.TextView
-import com.example.recipeappiti.home.model.Area
+import com.example.recipeappiti.core.model.remote.Area
 
 class CuisineAdapter(
     context: Context,

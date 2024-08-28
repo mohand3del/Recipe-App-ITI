@@ -17,21 +17,24 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.recipeappiti.R
-import com.example.recipeappiti.auth.model.data.LocalDataSourceImpl
-import com.example.recipeappiti.auth.repository.UserRepositoryImpl
-import com.example.recipeappiti.core.model.local.UserDatabase
+import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
+import com.example.recipeappiti.core.model.local.repository.UserRepositoryImpl
+import com.example.recipeappiti.core.model.local.source.UserDatabase
 import com.example.recipeappiti.details.view.adapters.IngredientsRecyclerViewAdapter
 import com.example.recipeappiti.details.viewmodel.DetailsViewModel
 import com.example.recipeappiti.details.viewmodel.DetailsViewModelFactory
-import com.example.recipeappiti.home.data.remote.RemoteGsonDataImpl
-import com.example.recipeappiti.home.model.Meal
-import com.example.recipeappiti.home.repository.MealRepositoryImpl
+import com.example.recipeappiti.core.model.remote.source.RemoteGsonDataImpl
+import com.example.recipeappiti.core.model.remote.Meal
+import com.example.recipeappiti.core.model.remote.repository.MealRepositoryImpl
+import com.example.recipeappiti.core.viewmodel.DataViewModel
+import com.example.recipeappiti.core.viewmodel.DataViewModelFactory
 import com.example.recipeappiti.main.viewModel.RecipeActivityViewModel
 import com.example.recipeappiti.main.viewModel.RecipeActivityViewModelFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
@@ -41,26 +44,22 @@ import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.Abs
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.listeners.FullscreenListener
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.options.IFramePlayerOptions
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.views.YouTubePlayerView
+import kotlinx.coroutines.launch
 
 class RecipeDetailFragment : Fragment() {
     private val detailsViewModel: DetailsViewModel by viewModels {
+        val mealRepository = MealRepositoryImpl(RemoteGsonDataImpl())
+        DetailsViewModelFactory(mealRepository)
+    }
+
+    private val dataViewModel: DataViewModel by activityViewModels {
         val userRepository = UserRepositoryImpl(
             LocalDataSourceImpl(
                 UserDatabase.getDatabaseInstance(requireContext()).userDao()
             )
         )
         val mealRepository = MealRepositoryImpl(RemoteGsonDataImpl())
-        DetailsViewModelFactory(mealRepository, userRepository)
-    }
-
-    private val sharedViewModel: RecipeActivityViewModel by activityViewModels {
-
-        val database = UserDatabase.getDatabaseInstance(requireContext())
-        val userDao = database.userDao()
-        val localDataSource = LocalDataSourceImpl(userDao)
-        val userRepository = UserRepositoryImpl(localDataSource)
-        RecipeActivityViewModelFactory(userRepository)
-
+        DataViewModelFactory(userRepository, mealRepository)
     }
 
     // Youtube
@@ -129,6 +128,7 @@ class RecipeDetailFragment : Fragment() {
             .build()
         youtubePlayerView.enableAutomaticInitialization = false
         lifecycle.addObserver(youtubePlayerView)
+
         bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation)
         navController = findNavController()
         ingredientsRecycler = requireView().findViewById(R.id.ingredientsRecycler)
@@ -152,7 +152,9 @@ class RecipeDetailFragment : Fragment() {
     private fun initListeners() {
         backImage.setOnClickListener { navController.popBackStack() }
 
-        favouriteImage.setOnClickListener { detailsViewModel.changeFavouriteState(recipeId) }
+        favouriteImage.setOnClickListener {
+            changeFavouriteState(recipeId, true)
+        }
 
         ingredientsCard.setOnClickListener {
             ingredientsRecycler.isVisible = !ingredientsRecycler.isVisible
@@ -167,30 +169,27 @@ class RecipeDetailFragment : Fragment() {
 
     private fun initObservers() {
 
-        sharedViewModel.itemDetails.observe(viewLifecycleOwner){id ->
-
+        dataViewModel.itemDetails.observe(viewLifecycleOwner) {id ->
             recipeId = id
-
+            changeFavouriteState(recipeId, false)
             detailsViewModel.getMealDetails(id)
-
         }
 
-        detailsViewModel.recipe.observe(viewLifecycleOwner){ result ->
+        detailsViewModel.recipe.observe(viewLifecycleOwner) { result ->
             bindData(result)
         }
 
-        detailsViewModel.isFavourite.observe(viewLifecycleOwner, Observer { result ->
+        dataViewModel.isFavourite.observe(viewLifecycleOwner) { result ->
             favouriteImage.setImageResource(
                 when (result) {
                     true -> R.drawable.loved_icon
                     false -> R.drawable.love_icon_light
                 }
             )
-        })
+        }
     }
 
     private fun bindData(recipe: Meal) {
-        detailsViewModel.checkFavouriteState(recipe.idMeal)
         ingredientsAdapter.updateData(recipe.listIngredientsWithMeasures)
         ingredientsRecycler.adapter = ingredientsAdapter
         ingredientsRecycler.layoutManager = LinearLayoutManager(requireContext())
@@ -200,6 +199,12 @@ class RecipeDetailFragment : Fragment() {
         Glide.with(requireContext()).load(recipe.strMealThumb).into(mealImage)
         instructionsText.text = recipe.strInstructions
         activateYoutubePlayer(recipe.strYoutube)
+    }
+
+    private fun changeFavouriteState(recipeId: String, isChange: Boolean) {
+        dataViewModel.viewModelScope.launch {
+            dataViewModel.changeFavouriteState(recipeId, isChange)
+        }
     }
 
     private fun activateYoutubePlayer(url: String) {

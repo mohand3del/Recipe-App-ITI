@@ -4,11 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipeappiti.auth.repository.UserRepository
-import com.example.recipeappiti.home.model.FailureReason
-import com.example.recipeappiti.home.model.GsonDataArea
-import com.example.recipeappiti.home.model.Response
-import com.example.recipeappiti.home.repository.MealRepository
+import com.example.recipeappiti.core.model.local.repository.UserRepository
+import com.example.recipeappiti.core.model.remote.FailureReason
+import com.example.recipeappiti.core.model.remote.GsonDataArea
+import com.example.recipeappiti.core.model.remote.Response
+import com.example.recipeappiti.core.model.remote.repository.MealRepository
 import kotlinx.coroutines.launch
 import java.io.IOException
 
