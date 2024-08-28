@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipeappiti.core.model.local.repository.UserRepository
 import com.example.recipeappiti.core.model.remote.Meal
+import com.example.recipeappiti.core.model.remote.Response
 import com.example.recipeappiti.core.model.remote.repository.MealRepository
 import kotlinx.coroutines.launch
 
@@ -31,6 +32,21 @@ class DataViewModel(
     private val _recipes = MutableLiveData<MutableList<Meal>>()
     val recipes: LiveData<MutableList<Meal>> get() = _recipes
 
+
+    private val _cuisinesData = MutableLiveData<List<String>>()
+    val cuisinesData: LiveData<List<String>> get() = _cuisinesData
+
+    fun setCuisines(cuisines: List<String>) {
+
+        _cuisinesData.value = cuisines
+
+        viewModelScope.launch {
+
+            userRepository.updateCuisines(cuisines)
+
+        }
+
+    }
 
     init {
         _categorySearch.value = null

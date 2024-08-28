@@ -19,14 +19,6 @@ class BottomSheetCuisinesViewModel(
 
 ) : ViewModel() {
 
-    private val _setCuisinesData = MutableLiveData<Response<Unit>>()
-    val setCuisinesData: LiveData<Response<Unit>> get() = _setCuisinesData
-
-
-    fun setCuisines(cuisines: List<String>) {
-        applyResponse(_setCuisinesData){userRepository.updateCuisines(cuisines)}
-    }
-
     private val _allCuisines = MutableLiveData<Response<GsonDataArea>>()
     val allCuisines: LiveData<Response<GsonDataArea>> get() = _allCuisines
 
