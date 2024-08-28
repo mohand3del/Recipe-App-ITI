@@ -2,14 +2,13 @@ package com.example.recipeappiti.home.view.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
-import android.widget.EditText
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
+import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -27,8 +26,8 @@ import com.example.recipeappiti.core.model.local.source.UserDatabase
 import com.example.recipeappiti.core.model.remote.Response
 import com.example.recipeappiti.core.model.remote.repository.MealRepositoryImpl
 import com.example.recipeappiti.core.model.remote.source.RemoteGsonDataImpl
-import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder
 import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder.createFailureResponse
+import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder.createMaterialAlertDialogBuilderOkCancel
 import com.example.recipeappiti.core.viewmodel.DataViewModel
 import com.example.recipeappiti.core.viewmodel.DataViewModelFactory
 import com.example.recipeappiti.home.view.adapter.AdapterRVCategories
@@ -108,13 +107,6 @@ class HomeFragment : Fragment() {
 
         initUi()
 
-        popup.setOnMenuItemClickListener { item: MenuItem ->
-
-            homeFavCuisines(item.title.toString())
-
-            true
-        }
-
         searchBarHome.setOnClickListener {
 
             recipeViewModel.navigateTo(R.id.action_search)
@@ -123,7 +115,7 @@ class HomeFragment : Fragment() {
 
         btnFreeTrial.setOnClickListener {
 
-            CreateMaterialAlertDialogBuilder.createMaterialAlertDialogBuilderOkCancel(
+            createMaterialAlertDialogBuilderOkCancel(
                 requireContext(),
                 "Start Free Trial",
                 "Would you like to start a free trial to access premium recipes?",
@@ -153,6 +145,18 @@ class HomeFragment : Fragment() {
             mainCuisine.observe(viewLifecycleOwner) { mainCuisine ->
 
                 mainCuisine?.let { homeFavCuisines(it) }
+
+            }
+
+        }
+
+        with(dataViewModel){
+
+            cuisinesData.observe(viewLifecycleOwner){data->
+
+                data?.forEachIndexed { index, item ->
+                    popup.menu.add(0, index, 0, item)
+                }
 
             }
 
@@ -238,8 +242,6 @@ class HomeFragment : Fragment() {
             }
         }
 
-        viewModel.getUserCuisines()
-
         with(viewModel) {
             getUserCuisines()
             userCuisines.observe(viewLifecycleOwner) { response ->
@@ -256,13 +258,15 @@ class HomeFragment : Fragment() {
 
                             popup.menu.clear()
 
+
                             with(dataViewModel) {
+
                                 updateMainCuisine(data[0])
+
+                                setCuisines(data)
+
                             }
 
-                            data.forEachIndexed { index, item ->
-                                popup.menu.add(0, index, 0, item)
-                            }
 
                         } else {
                             val bottomSheetCuisines = BottomSheetCuisines()
@@ -272,6 +276,7 @@ class HomeFragment : Fragment() {
                             )
 
                         }
+
                     }
 
                     is Response.Failure -> {
@@ -299,23 +304,22 @@ class HomeFragment : Fragment() {
         cardViewFreeTrial = view.findViewById(R.id.cardViewFreeTrial)
 
         btnFreeTrial = view.findViewById(R.id.btnFreeTrial)
-
         btnDrawer = view.findViewById(R.id.btnHomeDrawer)
-
         textViewCuisines = view.findViewById(R.id.textViewCuisines)
 
-        recyclerViewCategories.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        recyclerViewRecommendations.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        recyclerViewCuisine.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
-        recyclerViewGold.layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        setupRecyclerView(recyclerViewCategories)
+        setupRecyclerView(recyclerViewRecommendations)
+        setupRecyclerView(recyclerViewCuisine)
+        setupRecyclerView(recyclerViewGold)
 
         btnCuisines = view.findViewById(R.id.btnCuisines)
 
-        popup = PopupMenu(requireContext(), btnCuisines)
+        popup = PopupMenu(requireContext(), btnCuisines).apply {
+            setOnMenuItemClickListener { item ->
+                homeFavCuisines(item.title.toString())
+                true
+            }
+        }
 
         drawer = requireActivity().findViewById(R.id.drawer)
         searchBarHome = view.findViewById(R.id.searchBar_home)
@@ -323,15 +327,16 @@ class HomeFragment : Fragment() {
         bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation)
 
         btnDrawer.setOnClickListener {
-
             drawer.openDrawer(GravityCompat.START)
-
         }
 
-        navController =
-            requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
-                ?.findNavController()
+        navController = requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
     }
+
+    private fun setupRecyclerView(recyclerView: RecyclerView) {
+        recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+    }
+
 
     private fun homeFavCuisines(
         cuisine: String

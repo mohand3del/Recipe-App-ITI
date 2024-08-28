@@ -62,6 +62,8 @@ class BottomSheetCuisines : BottomSheetDialogFragment() {
         val gridLayoutManager = GridLayoutManager(requireContext(), 3)
         recyclerviewCuisines.layoutManager = gridLayoutManager
 
+        dataViewModel.cuisinesData.observe(viewLifecycleOwner){ dismiss() }
+
         viewModel.getAllCuisines()
 
         viewModel.allCuisines.observe(viewLifecycleOwner) { response ->
@@ -73,7 +75,7 @@ class BottomSheetCuisines : BottomSheetDialogFragment() {
 
                 is Response.Success -> {
 
-                    val adapter = AdapterRVCuisines(response.data.meals){lastCuisine ->
+                    val adapter = AdapterRVCuisines(response.data.meals) { lastCuisine ->
 
                         dataViewModel.updateMainCuisine(lastCuisine)
 
@@ -82,27 +84,11 @@ class BottomSheetCuisines : BottomSheetDialogFragment() {
 
                     btnDone.setOnClickListener {
 
-                        viewModel.setCuisines(adapter.getSelectedCuisines())
+                        dataViewModel.setCuisines(adapter.getSelectedCuisines())
 
-                        viewModel.setCuisinesData.observe(viewLifecycleOwner) { response ->
-
-                            when (response) {
-
-                                is Response.Loading -> {
-
-                                }
-
-                                is Response.Success -> {
-
-
-
-                                    dismiss()
-                                }
-
-                                is Response.Failure -> {}
-                            }
-                        }
                     }
+
+
                 }
 
                 is Response.Failure -> {
