@@ -8,7 +8,10 @@ import com.example.recipeappiti.R
 import com.example.recipeappiti.core.model.remote.Area
 import com.google.android.material.chip.Chip
 
-class AdapterRVCuisines(private val chipList: List<Area>) :
+class AdapterRVCuisines(
+    private val chipList: List<Area>,
+    private var lastCuisine: ((String?) -> Unit)?
+) :
     RecyclerView.Adapter<AdapterRVCuisines.ChipViewHolder>() {
 
     private val selectedCuisines = mutableSetOf<String>()
@@ -34,8 +37,12 @@ class AdapterRVCuisines(private val chipList: List<Area>) :
                 holder.chip.isChecked = true
             }
 
-        }
+            if (selectedCuisines.isEmpty())
+                lastCuisine?.invoke(null)
+            else
+                lastCuisine?.invoke(selectedCuisines.firstOrNull())
 
+        }
     }
 
     override fun getItemCount(): Int = chipList.size

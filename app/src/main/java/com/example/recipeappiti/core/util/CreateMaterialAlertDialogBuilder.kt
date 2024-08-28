@@ -1,6 +1,8 @@
 package com.example.recipeappiti.core.util
 
 import android.content.Context
+import com.example.recipeappiti.core.model.remote.FailureReason
+import com.example.recipeappiti.core.model.remote.Response
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 object CreateMaterialAlertDialogBuilder {
@@ -52,6 +54,35 @@ object CreateMaterialAlertDialogBuilder {
             .setCancelable(false)
             .show()
 
+    }
+
+    fun createFailureResponse(response: Response.Failure, context: Context) {
+        when (val failureReason = response.reason) {
+            is FailureReason.NoInternet -> {
+
+                createMaterialAlertDialogBuilderOkCancel(
+                    context,
+                    title = "No Internet Connection",
+                    message = "Please check your internet connection and try again.",
+                    positiveBtnMsg = "Try again",
+                    negativeBtnMsg = "Cancel"
+                ) {
+                    //TODO Optionally, define any action to take after the dialog is dismissed
+                }
+            }
+
+            is FailureReason.UnknownError -> {
+                val errorMessage = failureReason.error
+                createMaterialAlertDialogBuilderOk(
+                    context,
+                    title = "Unknown Error",
+                    message = "An unknown error occurred: $errorMessage",
+                    positiveBtnMsg = "OK"
+                ) {
+
+                }
+            }
+        }
     }
 
 }
