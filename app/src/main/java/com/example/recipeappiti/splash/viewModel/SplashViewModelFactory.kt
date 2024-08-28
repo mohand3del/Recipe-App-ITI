@@ -2,7 +2,7 @@ package com.example.recipeappiti.splash.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.recipeappiti.auth.repository.UserRepository
+import com.example.recipeappiti.core.model.local.repository.UserRepository
 
 class SplashViewModelFactory(
 

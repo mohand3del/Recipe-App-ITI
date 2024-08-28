@@ -4,32 +4,37 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.LiveData
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeappiti.R
-import com.example.recipeappiti.core.model.util.CreateMaterialAlertDialogBuilder
-import com.example.recipeappiti.home.data.remote.RemoteGsonDataImpl
-import com.example.recipeappiti.home.model.FailureReason
-import com.example.recipeappiti.home.model.Response
-import com.example.recipeappiti.home.repository.MealRepositoryImpl
+import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder
+import com.example.recipeappiti.core.model.remote.source.RemoteGsonDataImpl
+import com.example.recipeappiti.core.model.remote.FailureReason
+import com.example.recipeappiti.core.model.remote.Response
+import com.example.recipeappiti.core.model.remote.repository.MealRepositoryImpl
 import com.example.recipeappiti.search.view.adapters.AdapterRVCategoryFilters
 import com.example.recipeappiti.search.viewModel.BottomSheetCategoriesFilterViewModel
 import com.example.recipeappiti.search.viewModel.BottomSheetCategoriesFilterViewModelFactory
+import com.example.recipeappiti.search.viewModel.SearchFragmentViewModel
+import com.example.recipeappiti.search.viewModel.SearchFragmentViewModelFactory
 import com.facebook.shimmer.ShimmerFrameLayout
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class BottomSheetCategoryFilter(
-
-    private val doFilter: (String) -> Unit
-
-) : BottomSheetDialogFragment() {
+class BottomSheetCategoryFilter: BottomSheetDialogFragment() {
 
     private val viewModel: BottomSheetCategoriesFilterViewModel by viewModels {
         val remoteGsonDataSource = RemoteGsonDataImpl()
         val mealRepository = MealRepositoryImpl(remoteGsonDataSource)
         BottomSheetCategoriesFilterViewModelFactory(mealRepository)
+    }
+
+    private val searchViewModel: SearchFragmentViewModel by activityViewModels {
+        val remoteGsonDataSource = RemoteGsonDataImpl()
+        val mealRepository = MealRepositoryImpl(remoteGsonDataSource)
+        SearchFragmentViewModelFactory(mealRepository)
     }
 
     override fun onCreateView(
@@ -47,7 +52,7 @@ class BottomSheetCategoryFilter(
 
         observeResponse(viewModel.categories, null, recyclerView,
             { data -> AdapterRVCategoryFilters(data.categories){data->
-                doFilter(data)
+                searchViewModel.updateCategory(data)
                 dismiss()
             } }, null
         )

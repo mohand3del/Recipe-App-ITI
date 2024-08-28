@@ -21,14 +21,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeappiti.R
-import com.example.recipeappiti.auth.model.data.LocalDataSourceImpl
-import com.example.recipeappiti.auth.repository.UserRepositoryImpl
-import com.example.recipeappiti.core.model.local.UserDatabase
-import com.example.recipeappiti.core.model.util.CreateMaterialAlertDialogBuilder
-import com.example.recipeappiti.home.data.remote.RemoteGsonDataImpl
-import com.example.recipeappiti.home.model.FailureReason
-import com.example.recipeappiti.home.model.Response
-import com.example.recipeappiti.home.repository.MealRepositoryImpl
+import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
+import com.example.recipeappiti.core.model.local.repository.UserRepositoryImpl
+import com.example.recipeappiti.core.model.local.source.UserDatabase
+import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder
+import com.example.recipeappiti.core.model.remote.source.RemoteGsonDataImpl
+import com.example.recipeappiti.core.model.remote.FailureReason
+import com.example.recipeappiti.core.model.remote.Response
+import com.example.recipeappiti.core.model.remote.repository.MealRepositoryImpl
+import com.example.recipeappiti.core.viewmodel.DataViewModel
+import com.example.recipeappiti.core.viewmodel.DataViewModelFactory
 import com.example.recipeappiti.home.view.adapter.AdapterRVCategories
 import com.example.recipeappiti.home.view.adapter.AdapterRVItemMeal
 import com.example.recipeappiti.home.view.bottomSheets.BottomSheetCuisines
@@ -43,7 +45,6 @@ import com.google.android.material.card.MaterialCardView
 
 class HomeFragment : Fragment() {
 
-
     private val viewModel: HomeFragmentViewModel by viewModels {
         val remoteGsonDataSource = RemoteGsonDataImpl()
 
@@ -57,16 +58,22 @@ class HomeFragment : Fragment() {
         HomeFragmentViewModelFactory(mealRepository, userRepository)
     }
 
-    private val sharedViewModel: RecipeActivityViewModel by activityViewModels {
-
+    private val recipeViewModel: RecipeActivityViewModel by activityViewModels {
         val database = UserDatabase.getDatabaseInstance(requireContext())
         val userDao = database.userDao()
         val localDataSource = LocalDataSourceImpl(userDao)
-
         val userRepository = UserRepositoryImpl(localDataSource)
-
         RecipeActivityViewModelFactory(userRepository)
+    }
 
+    private val dataViewModel: DataViewModel by activityViewModels {
+        val userRepository = UserRepositoryImpl(
+            LocalDataSourceImpl(
+                UserDatabase.getDatabaseInstance(requireContext()).userDao()
+            )
+        )
+        val mealRepository = MealRepositoryImpl(RemoteGsonDataImpl())
+        DataViewModelFactory(userRepository, mealRepository)
     }
 
     private lateinit var recyclerViewCategories: RecyclerView
@@ -362,7 +369,7 @@ class HomeFragment : Fragment() {
 
     private fun goToDetails(id: String) {
 
-        sharedViewModel.setItemDetails(id)
+        dataViewModel.setItemDetails(id)
 
         navController?.navigate(R.id.recipeDetailFragment)
 
@@ -370,9 +377,9 @@ class HomeFragment : Fragment() {
 
     private fun goToSearchCategories(name: String) {
 
-        sharedViewModel.updateSearchCategory(name)
+        dataViewModel.updateSearchCategory(name)
 
-        sharedViewModel.navigateTo(R.id.action_search)
+        recipeViewModel.navigateTo(R.id.action_search)
 
     }
 

@@ -8,12 +8,7 @@ import com.example.recipeappiti.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.card.MaterialCardView
 
-class BottomSheetFilters(
-
-    private val doCuisinesFilter: (String) -> Unit,
-    private val doCategoryFilter: (String) -> Unit
-
-) : BottomSheetDialogFragment() {
+class BottomSheetFilters: BottomSheetDialogFragment() {
 
 
     override fun onCreateView(
@@ -26,12 +21,8 @@ class BottomSheetFilters(
         val itemCategoryBtn: MaterialCardView = view.findViewById(R.id.item_category_btn)
         val itemCuisinesBtn: MaterialCardView = view.findViewById(R.id.item_cuisines_btn)
 
-        val bottomSheetCategoryFilter = BottomSheetCategoryFilter(){
-                data-> doCategoryFilter(data)
-        }
-        val bottomSheetCuisinesFilter = BottomSheetCuisinesFilter(){
-            data-> doCuisinesFilter(data)
-        }
+        val bottomSheetCategoryFilter = BottomSheetCategoryFilter()
+        val bottomSheetCuisinesFilter = BottomSheetCuisinesFilter()
 
         itemCuisinesBtn.setOnClickListener {
             dismiss()

@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipeappiti.auth.repository.UserRepository
-import com.example.recipeappiti.home.model.FailureReason
-import com.example.recipeappiti.home.model.Response
+import com.example.recipeappiti.core.model.local.repository.UserRepository
+import com.example.recipeappiti.core.model.remote.FailureReason
+import com.example.recipeappiti.core.model.remote.Response
 import kotlinx.coroutines.launch
 import java.io.IOException
 
@@ -22,24 +22,6 @@ class RecipeActivityViewModel(
 
     fun navigateTo(fragmentName: Int) {
         _navigateToFragment.value = fragmentName
-    }
-
-    private val _categorySearch = MutableLiveData<String?>()
-    val categorySearch: LiveData<String?> get() = _categorySearch
-
-    fun updateSearchCategory(category: String?) {
-        _categorySearch.value = category
-    }
-
-    private val _itemDetails = MutableLiveData<String>()
-    val itemDetails: LiveData<String> get() = _itemDetails
-
-    fun setItemDetails(id: String) {
-        _itemDetails.value = id
-    }
-
-    init {
-        _categorySearch.value = null
     }
 
     private val _deletedAccount = MutableLiveData<Response<Unit>>()

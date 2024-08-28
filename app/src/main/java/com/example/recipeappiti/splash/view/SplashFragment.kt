@@ -4,21 +4,19 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.recipeappiti.R
-import com.example.recipeappiti.auth.model.data.LocalDataSourceImpl
-import com.example.recipeappiti.auth.repository.UserRepositoryImpl
-import com.example.recipeappiti.core.model.local.UserDatabase
-import com.example.recipeappiti.home.model.FailureReason
-import com.example.recipeappiti.home.model.Response
-import com.example.recipeappiti.main.view.activities.RecipeActivity
+import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
+import com.example.recipeappiti.core.model.local.repository.UserRepositoryImpl
+import com.example.recipeappiti.core.model.local.source.UserDatabase
+import com.example.recipeappiti.core.model.remote.FailureReason
+import com.example.recipeappiti.core.model.remote.Response
+import com.example.recipeappiti.main.view.RecipeActivity
 import com.example.recipeappiti.splash.viewModel.SplashViewModel
 import com.example.recipeappiti.splash.viewModel.SplashViewModelFactory
 

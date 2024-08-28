@@ -6,11 +6,13 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeappiti.R
-import com.example.recipeappiti.home.model.Area
+import com.example.recipeappiti.core.model.remote.Area
 
 class AdapterRVCuisinesFilters(
-    private val filters: List<Area>, private val doFilter: (String) -> Unit
-) : RecyclerView.Adapter<AdapterRVCuisinesFilters.MealViewHolder>() {
+    private val filters: List<Area>,
+    private val doFilter: (String) -> Unit,
+
+    ) : RecyclerView.Adapter<AdapterRVCuisinesFilters.MealViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealViewHolder {
         val view = LayoutInflater.from(parent.context)

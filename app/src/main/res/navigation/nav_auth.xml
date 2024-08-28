@@ -35,9 +35,9 @@
     </fragment>
     <fragment
         android:id="@+id/forgetPasswordFragment"
-        android:name="com.example.recipeappiti.ForgetPasswordFragment"
+        android:name="com.example.recipeappiti.auth.resetpassword.EmailVerificationFragment"
         android:label="fragment_forget_password"
-        tools:layout="@layout/fragment_forget_password" >
+        tools:layout="@layout/fragment_email_verification" >
         <action
             android:id="@+id/action_forgetPasswordFragment_to_loginFragment"
             app:destination="@id/loginFragment" />
@@ -47,7 +47,7 @@
     </fragment>
     <fragment
         android:id="@+id/setNewPasswordFragment"
-        android:name="com.example.recipeappiti.SetNewPasswordFragment"
+        android:name="com.example.recipeappiti.auth.resetpassword.SetNewPasswordFragment"
         android:label="fragment_set_new_password"
         tools:layout="@layout/fragment_set_new_password" >
         <action
@@ -56,7 +56,7 @@
     </fragment>
     <fragment
         android:id="@+id/restPasswordFragment"
-        android:name="com.example.recipeappiti.RestPasswordFragment"
+        android:name="com.example.recipeappiti.auth.resetpassword.PasscodeFragment"
         android:label="RestPasswordFragment" >
         <action
             android:id="@+id/action_restPasswordFragment_to_setNewPasswordFragment"

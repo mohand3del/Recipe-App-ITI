@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeappiti.R
-import com.example.recipeappiti.home.model.Area
+import com.example.recipeappiti.core.model.remote.Area
 import com.google.android.material.chip.Chip
 
 class AdapterRVCuisines(private val chipList: List<Area>) :

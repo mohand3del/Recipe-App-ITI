@@ -2,8 +2,8 @@ package com.example.recipeappiti.home.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.recipeappiti.auth.repository.UserRepository
-import com.example.recipeappiti.home.repository.MealRepository
+import com.example.recipeappiti.core.model.local.repository.UserRepository
+import com.example.recipeappiti.core.model.remote.repository.MealRepository
 
 class HomeFragmentViewModelFactory(
     private val mealRepository: MealRepository,

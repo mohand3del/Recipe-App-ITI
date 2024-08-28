@@ -2,7 +2,7 @@ package com.example.recipeappiti.search.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.recipeappiti.home.repository.MealRepository
+import com.example.recipeappiti.core.model.remote.repository.MealRepository
 
 class BottomSheetCategoriesFilterViewModelFactory(
     private val mealRepository: MealRepository

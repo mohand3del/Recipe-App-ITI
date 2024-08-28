@@ -2,8 +2,7 @@ package com.example.recipeappiti.auth.register.viewmodel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.recipeappiti.auth.repository.UserRepository
-import com.example.recipeappiti.home.repository.MealRepository
+import com.example.recipeappiti.core.model.local.repository.UserRepository
 
 class RegisterViewModelFactory(
     private val userRepository: UserRepository

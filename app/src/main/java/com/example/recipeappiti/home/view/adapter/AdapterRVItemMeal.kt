@@ -8,7 +8,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.recipeappiti.R
-import com.example.recipeappiti.home.model.Meal
+import com.example.recipeappiti.core.model.remote.Meal
 
 class AdapterRVItemMeal(private val meals: List<Meal>, private val goToDetails: ((id:String) -> Unit)? = null) :
     RecyclerView.Adapter<AdapterRVItemMeal.MealViewHolder>() {
