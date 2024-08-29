@@ -168,13 +168,13 @@ class RecipeActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
                 return true
             }
 
-            R.id.action_help_feedback -> {
-                Toast.makeText(this, "Help & Feedback selected", Toast.LENGTH_SHORT).show()
+            R.id.action_about_developer -> {
+                navController?.navigate(R.id.action_about_developer, null, navOptions)
                 return true
             }
 
             R.id.action_about -> {
-                Toast.makeText(this, "About selected", Toast.LENGTH_SHORT).show()
+                navController?.navigate(R.id.action_about, null, navOptions)
                 return true
             }
 

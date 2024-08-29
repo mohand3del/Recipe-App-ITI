@@ -34,4 +34,14 @@
         android:name="com.example.recipeappiti.details.view.RecipeDetailFragment"
         android:label="fragment_recipe_detail"
         tools:layout="@layout/fragment_recipe_detail"/>
+    <fragment
+        android:id="@+id/action_about"
+        android:name="com.example.recipeappiti.aboutapp.view.AboutAppFragment"
+        android:label="fragment_about_app"
+        tools:layout="@layout/fragment_about_app" />
+    <fragment
+        android:id="@+id/action_about_developer"
+        android:name="com.example.recipeappiti.aboutDevelopers.view.AboutDevelopersFragment"
+        android:label="fragment_about_developers"
+        tools:layout="@layout/fragment_about_developers" />
 </navigation>

@@ -24,13 +24,13 @@
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_help_feedback"
-        android:title="Help &amp; Feedback"
+        android:id="@+id/action_about"
+        android:title="About"
         app:showAsAction="ifRoom" />
 
     <item
-        android:id="@+id/action_about"
-        android:title="About"
+        android:id="@+id/action_about_developer"
+        android:title="About Developers"
         app:showAsAction="ifRoom" />
 
     <item
