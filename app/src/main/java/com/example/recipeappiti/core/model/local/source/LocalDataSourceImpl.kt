@@ -2,7 +2,7 @@ package com.example.recipeappiti.core.model.local.source
 
 import com.example.recipeappiti.core.model.local.User
 
-class LocalDataSourceImpl(private val userDao: UserDao): LocalDataSource {
+class LocalDataSourceImpl(private val userDao: UserDao) : LocalDataSource {
     override suspend fun addUserToDB(user: User) {
         userDao.addUser(user)
     }

@@ -17,18 +17,16 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeappiti.R
-import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
 import com.example.recipeappiti.core.model.local.repository.UserRepositoryImpl
+import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
 import com.example.recipeappiti.core.model.local.source.UserDatabase
-import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder
-import com.example.recipeappiti.core.model.remote.source.RemoteGsonDataImpl
 import com.example.recipeappiti.core.model.remote.FailureReason
 import com.example.recipeappiti.core.model.remote.Response
 import com.example.recipeappiti.core.model.remote.repository.MealRepositoryImpl
+import com.example.recipeappiti.core.model.remote.source.RemoteGsonDataImpl
+import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder
 import com.example.recipeappiti.core.viewmodel.DataViewModel
 import com.example.recipeappiti.core.viewmodel.DataViewModelFactory
-import com.example.recipeappiti.main.viewModel.RecipeActivityViewModel
-import com.example.recipeappiti.main.viewModel.RecipeActivityViewModelFactory
 import com.example.recipeappiti.search.view.adapters.AdapterRVSearchMeals
 import com.example.recipeappiti.search.view.bottomSheets.BottomSheetFilters
 import com.example.recipeappiti.search.viewModel.SearchFragmentViewModel
@@ -40,7 +38,7 @@ class SearchFragment : Fragment() {
 
     private lateinit var searchBar: EditText
     private lateinit var recyclerviewSearch: RecyclerView
-    private var navController : NavController? = null
+    private var navController: NavController? = null
     private lateinit var filterBtn: MaterialCardView
     private var favouriteState: Boolean? = null
 
@@ -139,7 +137,9 @@ class SearchFragment : Fragment() {
                     }
                 }
 
-                is Response.Failure -> {failureResponse(response)}
+                is Response.Failure -> {
+                    failureResponse(response)
+                }
             }
 
         }
@@ -174,7 +174,7 @@ class SearchFragment : Fragment() {
 
     private fun cuisinesMeals(area: String) {
 
-        with(viewModel){
+        with(viewModel) {
 
             getCuisinesMeals(area)
 
@@ -211,7 +211,7 @@ class SearchFragment : Fragment() {
 
     private fun categoryMeals(category: String) {
 
-        with(viewModel){
+        with(viewModel) {
 
             getCategoryMeals(category)
 

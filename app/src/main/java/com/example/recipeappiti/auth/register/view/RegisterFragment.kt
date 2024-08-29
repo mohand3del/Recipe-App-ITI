@@ -13,12 +13,12 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import com.example.recipeappiti.R
 import com.example.recipeappiti.auth.model.ValidateCredentials
-import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
-import com.example.recipeappiti.core.util.AlertUtil
 import com.example.recipeappiti.auth.register.viewmodel.RegisterViewModel
 import com.example.recipeappiti.auth.register.viewmodel.RegisterViewModelFactory
 import com.example.recipeappiti.core.model.local.repository.UserRepositoryImpl
+import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
 import com.example.recipeappiti.core.model.local.source.UserDatabase
+import com.example.recipeappiti.core.util.AlertUtil
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 
@@ -130,18 +130,19 @@ class RegisterFragment : Fragment() {
         })
 
         registerViewModel.confirmPasswordMessage.observe(viewLifecycleOwner, Observer { result ->
-                passwordConfirmLayout.helperText = when (result) {
-                    is ValidateCredentials.Valid -> null
-                    is ValidateCredentials.InValid -> result.message
-                }
-            })
+            passwordConfirmLayout.helperText = when (result) {
+                is ValidateCredentials.Valid -> null
+                is ValidateCredentials.InValid -> result.message
+            }
+        })
 
         registerViewModel.registerState.observe(viewLifecycleOwner, Observer { result ->
             when (result) {
-                 is ValidateCredentials.Valid-> {
+                is ValidateCredentials.Valid -> {
                     val navController = findNavController()
                     navController.popBackStack()
                 }
+
                 is ValidateCredentials.InValid -> {
                     AlertUtil.showAlert(requireContext(), result.message)
                 }
@@ -161,13 +162,14 @@ class RegisterFragment : Fragment() {
             passwordValidation,
             confirmPasswordValidation
         )
-        when(credentialsStatus) {
-            is ValidateCredentials.Valid-> {
+        when (credentialsStatus) {
+            is ValidateCredentials.Valid -> {
                 val username = usernameField.text.toString()
                 val email = emailField.text.toString()
                 val password = passwordField.text.toString()
                 registerViewModel.registerUser(username, email, password)
             }
+
             is ValidateCredentials.InValid -> {
                 AlertUtil.showAlert(requireContext(), credentialsStatus.message)
             }

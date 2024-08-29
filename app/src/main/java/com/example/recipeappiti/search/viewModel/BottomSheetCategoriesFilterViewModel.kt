@@ -21,7 +21,7 @@ class BottomSheetCategoriesFilterViewModel(
     val categories: LiveData<Response<GsonDataCategories>> get() = _categories
 
 
-    fun getCategories() = applyResponse(_categories){
+    fun getCategories() = applyResponse(_categories) {
         mealRepository.getCategories()
     }
 

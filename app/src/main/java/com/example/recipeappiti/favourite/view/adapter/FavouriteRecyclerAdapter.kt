@@ -20,7 +20,8 @@ class FavouriteRecyclerAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.item_favourite, parent, false)
+        val view =
+            LayoutInflater.from(parent.context).inflate(R.layout.item_favourite, parent, false)
         return MealViewHolder(view)
     }
 

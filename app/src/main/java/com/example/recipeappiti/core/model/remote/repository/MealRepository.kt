@@ -16,10 +16,10 @@ interface MealRepository {
 
     suspend fun getCuisines(): GsonDataArea
 
-    suspend fun getMealsBySearch(title: String) : GsonDataMeal
+    suspend fun getMealsBySearch(title: String): GsonDataMeal
 
-    suspend fun getCategoryMeals(category: String) : GsonDataMeal
+    suspend fun getCategoryMeals(category: String): GsonDataMeal
 
-    suspend fun getMealById(id : String) : Meal
+    suspend fun getMealById(id: String): Meal
 
 }

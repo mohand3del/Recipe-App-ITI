@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipeappiti.core.model.local.repository.UserRepository
 import com.example.recipeappiti.core.model.remote.Meal
-import com.example.recipeappiti.core.model.remote.Response
 import com.example.recipeappiti.core.model.remote.repository.MealRepository
 import kotlinx.coroutines.launch
 
@@ -41,8 +40,6 @@ class DataViewModel(
         _categorySearch.value = null
         _mainCuisine.value = null
         loadFavoriteItems()
-
-
     }
 
     fun setCuisines(cuisines: List<String>) {

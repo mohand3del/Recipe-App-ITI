@@ -1,7 +1,5 @@
 package com.example.recipeappiti.favourite.view
 
-import com.example.recipeappiti.core.viewmodel.DataViewModel
-import com.example.recipeappiti.core.viewmodel.DataViewModelFactory
 import FavouriteRecyclerAdapter
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,14 +12,17 @@ import androidx.lifecycle.viewModelScope
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeappiti.R
-import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
 import com.example.recipeappiti.core.model.local.repository.UserRepositoryImpl
+import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
 import com.example.recipeappiti.core.model.local.source.UserDatabase
-import com.example.recipeappiti.core.model.remote.source.RemoteGsonDataImpl
 import com.example.recipeappiti.core.model.remote.repository.MealRepositoryImpl
+import com.example.recipeappiti.core.model.remote.source.RemoteGsonDataImpl
+import com.example.recipeappiti.core.viewmodel.DataViewModel
+import com.example.recipeappiti.core.viewmodel.DataViewModelFactory
 import kotlinx.coroutines.launch
 
 class FavouriteFragment : Fragment() {
+
     private val dataViewModel: DataViewModel by activityViewModels {
         val userRepository = UserRepositoryImpl(
             LocalDataSourceImpl(

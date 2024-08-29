@@ -6,7 +6,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipeappiti.core.model.local.repository.UserRepository
 import com.example.recipeappiti.core.model.remote.FailureReason
-import com.example.recipeappiti.core.model.remote.GsonDataArea
 import com.example.recipeappiti.core.model.remote.GsonDataCategories
 import com.example.recipeappiti.core.model.remote.GsonDataMeal
 import com.example.recipeappiti.core.model.remote.Meal
@@ -52,6 +51,7 @@ class HomeFragmentViewModel(
         }
 
     }
+
     private var _filteredMealsByAreas: MutableLiveData<Response<GsonDataMeal>> = MutableLiveData()
     val filteredMealsByAreas: LiveData<Response<GsonDataMeal>> get() = _filteredMealsByAreas
 
@@ -115,15 +115,29 @@ class HomeFragmentViewModel(
         }
     }
 
+//    fun getSomeRandomMeal(much: Int) {
+//        _someRandomMeal.value = Response.Loading
+//
+//        viewModelScope.launch {
+//            try {
+//                val meals = withContext(Dispatchers.IO) {
+//                    List(much) {
+//                        mealRepository.getRandomDataMeal().meals.first()
+//                    }
+//                }
+//                _someRandomMeal.value = Response.Success(meals.toMutableList())
+//            } catch (e: IOException) {
+//                _someRandomMeal.value = Response.Failure(FailureReason.NoInternet)
+//            } catch (e: Exception) {
+//                _someRandomMeal.value = Response.Failure(
+//                    FailureReason.UnknownError(
+//                        error = e.message ?: "Unknown error occurred"
+//                    )
+//                )
+//            }
+//        }
+//    }
 
-    private var _areasOfMeals: MutableLiveData<Response<GsonDataArea>> = MutableLiveData()
-    val areasOfMeals: LiveData<Response<GsonDataArea>> get() = _areasOfMeals
-
-    fun getAreasOfMeals() {
-        applyResponse(_areasOfMeals) {
-            mealRepository.getCuisines()
-        }
-    }
 
     private fun <T> applyResponse(
         liveData: MutableLiveData<Response<T>>,

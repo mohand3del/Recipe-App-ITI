@@ -83,5 +83,5 @@ fun Meal.getIngredientsWithMeasurements(): List<String> {
 
     return ingredients
         .filter { (ingredient, measure) -> !ingredient.isNullOrEmpty() && !measure.isNullOrEmpty() }
-        .mapIndexed {index, (ingredient, measure) -> "${index + 1}) $ingredient: $measure" }
+        .mapIndexed { index, (ingredient, measure) -> "${index + 1}) $ingredient: $measure" }
 }

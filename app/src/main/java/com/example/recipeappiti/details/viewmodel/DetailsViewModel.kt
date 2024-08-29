@@ -4,10 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipeappiti.core.model.local.repository.UserRepository
-import com.example.recipeappiti.core.model.remote.repository.MealRepository
 import com.example.recipeappiti.core.model.remote.Meal
 import com.example.recipeappiti.core.model.remote.getIngredientsWithMeasurements
+import com.example.recipeappiti.core.model.remote.repository.MealRepository
 import kotlinx.coroutines.launch
 
 class DetailsViewModel(private val mealRepository: MealRepository) : ViewModel() {

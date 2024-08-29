@@ -16,7 +16,6 @@ class RecipeActivityViewModel(
 
 ) : ViewModel() {
 
-
     private val _navigateToFragment = MutableLiveData<Int>()
     val navigateToFragment: LiveData<Int> get() = _navigateToFragment
 

@@ -4,7 +4,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipeappiti.core.model.local.repository.UserRepository
 import com.example.recipeappiti.core.model.remote.FailureReason
 import com.example.recipeappiti.core.model.remote.GsonDataMeal
 import com.example.recipeappiti.core.model.remote.Response
@@ -17,7 +16,7 @@ class SearchFragmentViewModel(private val mealRepository: MealRepository) : View
     private val _dataMeals: MutableLiveData<Response<GsonDataMeal>> = MutableLiveData()
     val dataMeals: LiveData<Response<GsonDataMeal>> get() = _dataMeals
 
-    fun searchByTitle(title: String) = applyResponse(_dataMeals){
+    fun searchByTitle(title: String) = applyResponse(_dataMeals) {
         mealRepository.getMealsBySearch(title)
     }
 
@@ -25,7 +24,7 @@ class SearchFragmentViewModel(private val mealRepository: MealRepository) : View
     private val _categoryMeals: MutableLiveData<Response<GsonDataMeal>> = MutableLiveData()
     val categoryMeals: LiveData<Response<GsonDataMeal>> get() = _categoryMeals
 
-    fun getCategoryMeals(category: String) = applyResponse(_categoryMeals){
+    fun getCategoryMeals(category: String) = applyResponse(_categoryMeals) {
         mealRepository.getCategoryMeals(category)
     }
 
@@ -33,7 +32,7 @@ class SearchFragmentViewModel(private val mealRepository: MealRepository) : View
     private val _cuisineMeals: MutableLiveData<Response<GsonDataMeal>> = MutableLiveData()
     val cuisineMeals: LiveData<Response<GsonDataMeal>> get() = _cuisineMeals
 
-    fun getCuisinesMeals(area: String) = applyResponse(_cuisineMeals){
+    fun getCuisinesMeals(area: String) = applyResponse(_cuisineMeals) {
         mealRepository.getCuisinesMeals(area)
     }
 

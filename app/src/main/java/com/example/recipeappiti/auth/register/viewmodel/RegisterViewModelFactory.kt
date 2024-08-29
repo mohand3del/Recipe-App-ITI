@@ -6,7 +6,7 @@ import com.example.recipeappiti.core.model.local.repository.UserRepository
 
 class RegisterViewModelFactory(
     private val userRepository: UserRepository
-): ViewModelProvider.Factory {
+) : ViewModelProvider.Factory {
     override fun <T : ViewModel> create(modelClass: Class<T>): T {
         if (modelClass.isAssignableFrom(RegisterViewModel::class.java)) {
             return RegisterViewModel(userRepository) as T

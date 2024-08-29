@@ -18,15 +18,15 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.recipeappiti.R
 import com.example.recipeappiti.auth.AuthActivity
-import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
 import com.example.recipeappiti.core.model.local.repository.UserRepositoryImpl
+import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
 import com.example.recipeappiti.core.model.local.source.UserDatabase
-import com.example.recipeappiti.core.model.remote.FailureReason
 import com.example.recipeappiti.core.model.remote.Response
+import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder.createFailureResponse
+import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder.createMaterialAlertDialogBuilderOkCancel
 import com.example.recipeappiti.main.viewModel.RecipeActivityViewModel
 import com.example.recipeappiti.main.viewModel.RecipeActivityViewModelFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.navigation.NavigationView
 import com.google.android.material.navigation.NavigationView.OnNavigationItemSelectedListener
 
@@ -76,27 +76,14 @@ class RecipeActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         viewModel.userName.observe(this) { response ->
 
             when (response) {
-                is Response.Loading -> {
-
-                }
+                is Response.Loading -> {}
 
                 is Response.Success -> {
                     userName.text = response.data
                 }
 
                 is Response.Failure -> {
-
-                    when (val failureReason = response.reason) {
-                        is FailureReason.NoInternet -> {
-                            // Show no internet connection message
-                        }
-
-                        is FailureReason.UnknownError -> {
-                            // Show unknown error message with the error details
-                            val errorMessage = failureReason.error
-
-                        }
-                    }
+                    createFailureResponse(response, this)
                 }
             }
         }
@@ -106,32 +93,17 @@ class RecipeActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
         viewModel.userEmail.observe(this) { response ->
 
             when (response) {
-                is Response.Loading -> {
-
-                }
+                is Response.Loading -> {}
 
                 is Response.Success -> {
                     userEmail.text = response.data
                 }
 
                 is Response.Failure -> {
-
-                    when (val failureReason = response.reason) {
-                        is FailureReason.NoInternet -> {
-                            // Show no internet connection message
-                        }
-
-                        is FailureReason.UnknownError -> {
-                            // Show unknown error message with the error details
-                            val errorMessage = failureReason.error
-
-                        }
-                    }
+                    createFailureResponse(response, this)
                 }
             }
         }
-
-
     }
 
     private fun initUi() {
@@ -199,25 +171,18 @@ class RecipeActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
             }
 
             R.id.action_log_out -> {
-
-                MaterialAlertDialogBuilder(this)
-                    .setTitle("Log Out")
-                    .setMessage("Are you sure you want to log out?")
-                    .setNeutralButton("cancel") { dialog, which ->
-
-                        dialog.dismiss()
-
-                    }
-                    .setPositiveButton("Log Out") { dialog, which ->
-
+                createMaterialAlertDialogBuilderOkCancel(
+                    context = this,
+                    title = "Log Out",
+                    message = "Are you sure you want to log out?",
+                    positiveBtnMsg = "Log Out",
+                    negativeBtnMsg = "Cancel",
+                    positiveBtnFun = {
                         viewModel.logOut()
 
                         viewModel.loggedOut.observe(this) { response ->
-
                             when (response) {
-                                is Response.Loading -> {
-
-                                }
+                                is Response.Loading -> {}
 
                                 is Response.Success -> {
                                     startActivity(Intent(this, AuthActivity::class.java))
@@ -225,44 +190,29 @@ class RecipeActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
                                 }
 
                                 is Response.Failure -> {
-
-                                    when (val failureReason = response.reason) {
-                                        is FailureReason.NoInternet -> {
-                                            // Show no internet connection message
-                                        }
-
-                                        is FailureReason.UnknownError -> {
-                                            // Show unknown error message with the error details
-                                            val errorMessage = failureReason.error
-
-                                        }
-                                    }
+                                    createFailureResponse(response, this)
                                 }
                             }
                         }
-
                     }
-                    .show()
+                )
 
                 return true
             }
 
             R.id.action_delete_account -> {
-                MaterialAlertDialogBuilder(this)
-                    .setTitle("Delete Account")
-                    .setMessage("This action will permanently delete your account. Are you sure you want to continue?")
-                    .setNeutralButton("cancel") { dialog, which ->
-                        dialog.dismiss()
-                    }
-                    .setPositiveButton("Delete") { dialog, which ->
+                createMaterialAlertDialogBuilderOkCancel(
+                    context = this,
+                    title = "Delete Account",
+                    message = "This action will permanently delete your account. Are you sure you want to continue?",
+                    positiveBtnMsg = "Delete",
+                    negativeBtnMsg = "Cancel",
+                    positiveBtnFun = {
                         viewModel.deleteAccount()
 
                         viewModel.deletedAccount.observe(this) { response ->
-
                             when (response) {
-                                is Response.Loading -> {
-
-                                }
+                                is Response.Loading -> {}
 
                                 is Response.Success -> {
                                     startActivity(Intent(this, AuthActivity::class.java))
@@ -270,24 +220,13 @@ class RecipeActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
                                 }
 
                                 is Response.Failure -> {
-
-                                    when (val failureReason = response.reason) {
-                                        is FailureReason.NoInternet -> {
-                                            // Show no internet connection message
-                                        }
-
-                                        is FailureReason.UnknownError -> {
-                                            // Show unknown error message with the error details
-                                            val errorMessage = failureReason.error
-
-                                        }
-                                    }
+                                    createFailureResponse(response, this)
                                 }
                             }
                         }
-
                     }
-                    .show()
+                )
+
                 return true
             }
 

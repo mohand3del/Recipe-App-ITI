@@ -21,7 +21,7 @@ class BottomSheetCuisinesFilterViewModel(
     val cuisines: LiveData<Response<GsonDataArea>> get() = _cuisines
 
 
-    fun getCuisines() = applyResponse(_cuisines){
+    fun getCuisines() = applyResponse(_cuisines) {
         mealRepository.getCuisines()
     }
 
