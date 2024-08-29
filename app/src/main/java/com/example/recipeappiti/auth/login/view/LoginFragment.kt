@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ScrollView
 import android.widget.TextView
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -34,6 +35,7 @@ class LoginFragment : Fragment() {
     private lateinit var navController: NavController
     private lateinit var signInButton: Button
     private lateinit var signUpText: TextView
+    private lateinit var forgetPasswordText: TextView
 
     private val loginViewModel: LoginViewModel by viewModels {
         val userRepository = UserRepositoryImpl(
@@ -54,20 +56,22 @@ class LoginFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        initViews()
+        
+        initViews(view)
         initListeners()
         initObservers()
     }
 
-    private fun initViews() {
-        scrollView = requireView().findViewById(R.id.loginScrollView)
-        emailField = requireView().findViewById(R.id.emailField2)
-        emailLayout = requireView().findViewById(R.id.emailLayout2)
-        passwordField = requireView().findViewById(R.id.passwordField2)
-        passwordLayout = requireView().findViewById(R.id.passwordLayout2)
+    private fun initViews(view:View) {
+        scrollView = view.findViewById(R.id.loginScrollView)
+        emailField = view.findViewById(R.id.emailField2)
+        emailLayout = view.findViewById(R.id.emailLayout2)
+        passwordField = view.findViewById(R.id.passwordField2)
+        passwordLayout = view.findViewById(R.id.passwordLayout2)
         navController = requireView().findNavController()
-        signInButton = requireView().findViewById(R.id.signInButton)
-        signUpText = requireView().findViewById(R.id.signUpText)
+        signInButton = view.findViewById(R.id.signInButton)
+        signUpText = view.findViewById(R.id.signUpText)
+        forgetPasswordText = view.findViewById(R.id.forgetPasswordText)
     }
 
     private fun initListeners() {
@@ -79,6 +83,9 @@ class LoginFragment : Fragment() {
             loginViewModel.resetStates()
             navController.navigate(R.id.action_loginFragment_to_registerFragment)
         }
+
+        forgetPasswordText.setOnClickListener { navController.navigate(R.id.action_loginFragment_to_emailVerificationFragment2) }
+
     }
 
     private fun initObservers() {

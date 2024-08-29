@@ -1,4 +1,4 @@
-package com.example.recipeappiti.splash.viewModel
+package com.example.recipeappiti.auth.splash.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider

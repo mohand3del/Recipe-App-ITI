@@ -1,4 +1,4 @@
-package com.example.recipeappiti.splash.view
+package com.example.recipeappiti.auth.splash.view
 
 import android.content.Intent
 import android.os.Bundle
@@ -17,8 +17,8 @@ import com.example.recipeappiti.core.model.local.source.UserDatabase
 import com.example.recipeappiti.core.model.remote.Response
 import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder.createFailureResponse
 import com.example.recipeappiti.main.view.RecipeActivity
-import com.example.recipeappiti.splash.viewModel.SplashViewModel
-import com.example.recipeappiti.splash.viewModel.SplashViewModelFactory
+import com.example.recipeappiti.auth.splash.viewModel.SplashViewModel
+import com.example.recipeappiti.auth.splash.viewModel.SplashViewModelFactory
 
 class SplashFragment : Fragment() {
 
