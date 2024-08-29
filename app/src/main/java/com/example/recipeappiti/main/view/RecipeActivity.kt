@@ -14,6 +14,7 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.recipeappiti.R
@@ -52,6 +53,11 @@ class RecipeActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
     private lateinit var userEmail: TextView
 
     private var navController: NavController? = null
+
+    private val navOptions = NavOptions.Builder()
+        .setEnterAnim(R.anim.slide_in_right)
+        .setPopExitAnim(R.anim.slide_out_right)
+        .build()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -141,7 +147,9 @@ class RecipeActivity : AppCompatActivity(), OnNavigationItemSelectedListener {
 
         when (item.itemId) {
             R.id.action_profile -> {
-                Toast.makeText(this, "Profile selected", Toast.LENGTH_SHORT).show()
+
+                navController?.navigate(R.id.action_profile, null, navOptions)
+
                 return true
             }
 
