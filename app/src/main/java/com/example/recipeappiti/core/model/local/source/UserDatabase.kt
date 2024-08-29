@@ -10,7 +10,7 @@ import com.example.recipeappiti.core.util.Converters
 
 @Database(entities = [User::class], version = 1)
 @TypeConverters(Converters::class)
-abstract class UserDatabase: RoomDatabase() {
+abstract class UserDatabase : RoomDatabase() {
     abstract fun userDao(): UserDao
 
     companion object {

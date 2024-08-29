@@ -8,7 +8,6 @@ import android.widget.Button
 import android.widget.ImageView
 import android.widget.PopupMenu
 import android.widget.TextView
-import android.widget.Toast
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.GravityCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -74,6 +73,7 @@ class HomeFragment : Fragment() {
         val mealRepository = MealRepositoryImpl(RemoteGsonDataImpl())
         DataViewModelFactory(userRepository, mealRepository)
     }
+
 
     private lateinit var recyclerViewCategories: RecyclerView
     private lateinit var recyclerViewRecommendations: RecyclerView
@@ -150,9 +150,9 @@ class HomeFragment : Fragment() {
 
         }
 
-        with(dataViewModel){
+        with(dataViewModel) {
 
-            cuisinesData.observe(viewLifecycleOwner){data->
+            cuisinesData.observe(viewLifecycleOwner) { data ->
 
                 data?.forEachIndexed { index, item ->
                     popup.menu.add(0, index, 0, item)
@@ -330,11 +330,14 @@ class HomeFragment : Fragment() {
             drawer.openDrawer(GravityCompat.START)
         }
 
-        navController = requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)?.findNavController()
+        navController =
+            requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+                ?.findNavController()
     }
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {
-        recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        recyclerView.layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
     }
 
 

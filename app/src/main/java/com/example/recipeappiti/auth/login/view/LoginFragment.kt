@@ -17,10 +17,10 @@ import com.example.recipeappiti.R
 import com.example.recipeappiti.auth.login.viewmodel.LoginViewModel
 import com.example.recipeappiti.auth.login.viewmodel.LoginViewModelFactory
 import com.example.recipeappiti.auth.model.ValidateCredentials
-import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
-import com.example.recipeappiti.core.util.AlertUtil
 import com.example.recipeappiti.core.model.local.repository.UserRepositoryImpl
+import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
 import com.example.recipeappiti.core.model.local.source.UserDatabase
+import com.example.recipeappiti.core.util.AlertUtil
 import com.example.recipeappiti.main.view.RecipeActivity
 import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout

@@ -18,9 +18,9 @@ class SplashViewModel(
 
 
     private val _loggedInUser = MutableLiveData<Response<Boolean>>()
-    val loggedInUser : LiveData<Response<Boolean>> get() = _loggedInUser
+    val loggedInUser: LiveData<Response<Boolean>> get() = _loggedInUser
 
-    fun getLoggedInUser() = applyResponse(_loggedInUser){
+    fun getLoggedInUser() = applyResponse(_loggedInUser) {
         userRepository.findLoggedInUser()
     }
 

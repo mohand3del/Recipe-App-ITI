@@ -1,9 +1,9 @@
 package com.example.recipeappiti.core.model.local.repository
 
-import com.example.recipeappiti.core.model.local.source.LocalDataSource
 import com.example.recipeappiti.core.model.local.User
+import com.example.recipeappiti.core.model.local.source.LocalDataSource
 
-class UserRepositoryImpl(private val userDataSource: LocalDataSource): UserRepository {
+class UserRepositoryImpl(private val userDataSource: LocalDataSource) : UserRepository {
     override suspend fun addUser(user: User) {
         userDataSource.addUserToDB(user)
     }
@@ -40,7 +40,7 @@ class UserRepositoryImpl(private val userDataSource: LocalDataSource): UserRepos
         return userDataSource.getLoggedInUsername()
     }
 
-    override suspend fun getCuisines():List<String> {
+    override suspend fun getCuisines(): List<String> {
         return userDataSource.getUserCuisines()
     }
 

@@ -10,7 +10,10 @@ import com.bumptech.glide.Glide
 import com.example.recipeappiti.R
 import com.example.recipeappiti.core.model.remote.Meal
 
-class AdapterRVItemMeal(private val meals: List<Meal>, private val goToDetails: ((id:String) -> Unit)? = null) :
+class AdapterRVItemMeal(
+    private val meals: List<Meal>,
+    private val goToDetails: ((id: String) -> Unit)? = null
+) :
     RecyclerView.Adapter<AdapterRVItemMeal.MealViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealViewHolder {

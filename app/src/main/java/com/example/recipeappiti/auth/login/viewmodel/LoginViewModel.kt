@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.recipeappiti.core.util.PasswordUtil
 import com.example.recipeappiti.auth.model.ValidateCredentials
 import com.example.recipeappiti.core.model.local.repository.UserRepositoryImpl
+import com.example.recipeappiti.core.util.PasswordUtil
 import kotlinx.coroutines.launch
 
 class LoginViewModel(private val userRepository: UserRepositoryImpl) : ViewModel() {
@@ -31,6 +31,7 @@ class LoginViewModel(private val userRepository: UserRepositoryImpl) : ViewModel
                 _isUserValid.value = ValidateCredentials.Valid
                 userRepository.logInUser(email)
             }
+
             false -> {
                 _isUserValid.value = ValidateCredentials.InValid("Incorrect Credentials")
             }

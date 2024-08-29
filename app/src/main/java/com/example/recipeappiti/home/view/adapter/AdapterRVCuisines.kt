@@ -51,6 +51,6 @@ class AdapterRVCuisines(
         val chip: Chip = itemView.findViewById(R.id.chipCuisines)
     }
 
-    fun getSelectedCuisines() = selectedCuisines.toList() //as List<String>
+    fun getSelectedCuisines() = selectedCuisines.toList()
 
 }

@@ -6,9 +6,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.recipeappiti.auth.model.ValidateCredentials
-import com.example.recipeappiti.core.util.PasswordUtil
-import com.example.recipeappiti.core.model.local.repository.UserRepository
 import com.example.recipeappiti.core.model.local.User
+import com.example.recipeappiti.core.model.local.repository.UserRepository
+import com.example.recipeappiti.core.util.PasswordUtil
 import kotlinx.coroutines.launch
 
 class RegisterViewModel(

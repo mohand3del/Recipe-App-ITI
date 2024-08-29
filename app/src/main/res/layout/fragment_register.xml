@@ -1,227 +1,231 @@
 <?xml version="1.0" encoding="utf-8"?>
-    <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:id="@+id/registerScrollView"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/registerScrollView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".auth.register.view.RegisterFragment">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:fillViewport="true"
-        tools:context=".auth.register.view.RegisterFragment">
+        android:fitsSystemWindows="true">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:fitsSystemWindows="true">
+        <TextView
+            android:id="@+id/titleText"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="60dp"
+            android:elevation="@dimen/elevation"
+            android:fontFamily="@font/work_sans"
+            android:text="@string/signup"
+            android:textAppearance="@style/CustomTextStyle"
+            android:textSize="50sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/titleText"
-                android:text="@string/signup"
-                android:textSize="50sp"
-                android:fontFamily="@font/work_sans"
-                android:textStyle="bold"
-                android:layout_width="0dp"
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/usernameCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="40dp"
+            app:cardBackgroundColor="@color/white_v2"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@id/titleText"
+            app:strokeWidth="0dp">
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/usernameLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="60dp"
-                android:elevation="@dimen/elevation"
-                android:textAppearance="@style/CustomTextStyle"
-                app:layout_constraintEnd_toStartOf="@+id/guideline2"
-                app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toStartOf="@+id/guideline"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:layout_margin="5dp"
+                app:boxStrokeWidth="0dp"
+                app:boxBackgroundColor="@color/white"
+                app:helperText="@string/required"
+                app:helperTextTextAppearance="@style/CustomHelperTextStyle"
+                app:helperTextTextColor="@color/warning"
+                app:hintEnabled="true">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/usernameCard"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
-                app:layout_constraintEnd_toStartOf="@+id/guideline2"
-                app:layout_constraintStart_toStartOf="@+id/guideline"
-                app:layout_constraintTop_toBottomOf="@id/titleText"
-                app:strokeWidth="0dp"
-                app:cardBackgroundColor="@color/white_v3">
-
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/usernameLayout"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/usernameField"
+                    style="@style/Widget.Material3.TextInputEditText.OutlinedBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:boxBackgroundColor="@color/white_v2"
-                    app:helperText="@string/required"
-                    app:helperTextTextColor="@color/warning"
-                    app:helperTextTextAppearance="@style/CustomHelperTextStyle"
-                    app:hintEnabled="true"
-                    app:boxStrokeWidth="0dp">
+                    android:hint="Username"
+                    android:inputType="textCapWords"
+                    android:textAppearance="@style/CustomTextStyle" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/usernameField"
-                        style="@style/Widget.Material3.TextInputEditText.OutlinedBox.Dense"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Username"
-                        android:inputType="textCapWords"
-                        android:textAppearance="@style/CustomTextStyle" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                </com.google.android.material.textfield.TextInputLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-            </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/emailCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/MarginTop"
+            app:cardBackgroundColor="@color/white_v2"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/usernameCard"
+            app:strokeWidth="0dp">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/emailCard"
-                android:layout_width="0dp"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/emailLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/MarginTop"
-                app:layout_constraintEnd_toStartOf="@+id/guideline2"
-                app:layout_constraintStart_toStartOf="@+id/guideline"
-                app:layout_constraintTop_toBottomOf="@+id/usernameCard"
-                app:strokeWidth="0dp"
-                app:cardBackgroundColor="@color/white_v3">
+                android:layout_margin="5dp"
+                app:boxStrokeWidth="0dp"
+                app:helperText="@string/required"
+                app:boxBackgroundColor="@color/white"
+                app:helperTextTextAppearance="@style/CustomHelperTextStyle"
+                app:helperTextTextColor="@color/warning"
+                app:hintEnabled="true">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/emailLayout"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/emailField"
+                    style="@style/Widget.Material3.TextInputEditText.OutlinedBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:boxBackgroundColor="@color/white_v2"
-                    app:helperText="@string/required"
-                    app:helperTextTextColor="@color/warning"
-                    app:boxStrokeWidth="0dp"
-                    app:helperTextTextAppearance="@style/CustomHelperTextStyle"
-                    app:hintEnabled="true">
+                    android:hint="Email"
+                    android:inputType="textEmailAddress"
+                    android:textAppearance="@style/CustomTextStyle" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/emailField"
-                        style="@style/Widget.Material3.TextInputEditText.OutlinedBox.Dense"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Email"
-                        android:inputType="textEmailAddress"
-                        android:textAppearance="@style/CustomTextStyle" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                </com.google.android.material.textfield.TextInputLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-            </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/passwordCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/MarginTop"
+            app:cardBackgroundColor="@color/white_v2"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/emailCard"
+            app:strokeWidth="0dp">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/passwordCard"
-                android:layout_width="0dp"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/MarginTop"
-                app:layout_constraintEnd_toStartOf="@+id/guideline2"
-                app:layout_constraintStart_toStartOf="@+id/guideline"
-                app:layout_constraintTop_toBottomOf="@+id/emailCard"
-                app:strokeWidth="0dp"
-                app:cardBackgroundColor="@color/white_v3">
+                android:layout_margin="5dp"
+                app:boxStrokeWidth="0dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="16"
+                app:counterTextAppearance="@font/poppins_light"
+                app:counterTextColor="@color/black"
+                app:endIconMode="password_toggle"
+                app:boxBackgroundColor="@color/white"
+                app:helperText="@string/required"
+                app:helperTextTextAppearance="@style/CustomHelperTextStyle"
+                app:helperTextTextColor="@color/warning"
+                app:hintEnabled="true">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/passwordLayout"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/passwordField"
+                    style="@style/Widget.Material3.TextInputEditText.OutlinedBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:boxBackgroundColor="@color/white_v2"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="16"
-                    app:counterTextColor="@color/black"
-                    app:counterTextAppearance="@font/poppins_light"
-                    app:endIconMode="password_toggle"
-                    app:boxStrokeWidth="0dp"
-                    app:helperText="@string/required"
-                    app:helperTextTextColor="@color/warning"
-                    app:helperTextTextAppearance="@style/CustomHelperTextStyle"
-                    app:hintEnabled="true">
+                    android:hint="Password"
+                    android:inputType="textPassword"
+                    android:maxLength="16"
+                    android:textAppearance="@style/CustomTextStyle" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/passwordField"
-                        style="@style/Widget.Material3.TextInputEditText.OutlinedBox.Dense"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Password"
-                        android:inputType="textPassword"
-                        android:maxLength="16"
-                        android:textAppearance="@style/CustomTextStyle" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                </com.google.android.material.textfield.TextInputLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-            </com.google.android.material.card.MaterialCardView>
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/passwordConfirmCard"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/MarginTop"
+            app:cardBackgroundColor="@color/white_v2"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/passwordCard"
+            app:strokeWidth="0dp">
 
-            <com.google.android.material.card.MaterialCardView
-                android:id="@+id/passwordConfirmCard"
-                android:layout_width="0dp"
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/passwordConfirmLayout"
+                style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/MarginTop"
-                app:layout_constraintEnd_toStartOf="@+id/guideline2"
-                app:layout_constraintStart_toStartOf="@+id/guideline"
-                app:layout_constraintTop_toBottomOf="@+id/passwordCard"
-                app:strokeWidth="0dp"
-                app:cardBackgroundColor="@color/white_v3">
+                android:layout_margin="5dp"
+                app:boxStrokeWidth="0dp"
+                app:counterEnabled="true"
+                app:counterMaxLength="16"
+                app:counterTextAppearance="@font/poppins_light"
+                app:counterTextColor="@color/black"
+                app:endIconMode="password_toggle"
+                app:helperText="@string/required"
+                app:boxBackgroundColor="@color/white"
+                app:helperTextTextAppearance="@style/CustomHelperTextStyle"
+                app:helperTextTextColor="@color/warning"
+                app:hintEnabled="true">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/passwordConfirmLayout"
-                    style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/passwordConfirmField"
+                    style="@style/Widget.Material3.TextInputEditText.OutlinedBox.Dense"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:boxBackgroundColor="@color/white_v2"
-                    app:counterEnabled="true"
-                    app:counterMaxLength="16"
-                    app:counterTextColor="@color/black"
-                    app:counterTextAppearance="@font/poppins_light"
-                    app:endIconMode="password_toggle"
-                    app:boxStrokeWidth="0dp"
-                    app:helperText="@string/required"
-                    app:helperTextTextColor="@color/warning"
-                    app:helperTextTextAppearance="@style/CustomHelperTextStyle"
-                    app:hintEnabled="true">
+                    android:hint="Confirm Password"
+                    android:inputType="textPassword"
+                    android:maxLength="16"
+                    android:textAppearance="@style/CustomTextStyle" />
 
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:id="@+id/passwordConfirmField"
-                        style="@style/Widget.Material3.TextInputEditText.OutlinedBox.Dense"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:hint="Confirm Password"
-                        android:inputType="textPassword"
-                        android:maxLength="16"
-                        android:textAppearance="@style/CustomTextStyle" />
+            </com.google.android.material.textfield.TextInputLayout>
 
-                </com.google.android.material.textfield.TextInputLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-            </com.google.android.material.card.MaterialCardView>
+        <Button
+            android:id="@+id/signUpButton"
+            style="@style/Widget.Material3.Button"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="35dp"
+            android:layout_marginBottom="40dp"
+            android:backgroundTint="@color/black"
+            android:fontFamily="@font/work_sans"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
+            android:text="Sign Up"
+            android:textAlignment="center"
+            android:textAppearance="@style/CustomTextStyle"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:elevation="@dimen/elevation"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/guideline2"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintStart_toStartOf="@+id/guideline"
+            app:layout_constraintTop_toBottomOf="@+id/passwordConfirmCard" />
 
-            <Button
-                android:id="@+id/signUpButton"
-                style="@style/Widget.Material3.Button"
-                android:backgroundTint="@color/black"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:paddingTop="10dp"
-                android:paddingBottom="10dp"
-                android:layout_marginTop="35dp"
-                android:layout_marginBottom="20dp"
-                android:text="Sign Up"
-                android:textAlignment="center"
-                android:textAppearance="@style/CustomTextStyle"
-                android:fontFamily="@font/work_sans"
-                android:textSize="24sp"
-                android:textStyle="bold"
-                app:elevation="@dimen/elevation"
-                app:layout_constraintEnd_toStartOf="@+id/guideline2"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintStart_toStartOf="@+id/guideline"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/passwordConfirmCard" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_begin="20dp" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_begin="20dp" />
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_end="20dp" />
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/guideline2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                app:layout_constraintGuide_end="20dp" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-
-    </ScrollView>
+</ScrollView>

@@ -8,7 +8,7 @@ import com.example.recipeappiti.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.card.MaterialCardView
 
-class BottomSheetFilters: BottomSheetDialogFragment() {
+class BottomSheetFilters : BottomSheetDialogFragment() {
 
 
     override fun onCreateView(

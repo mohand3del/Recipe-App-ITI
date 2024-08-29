@@ -2,7 +2,6 @@ package com.example.recipeappiti.search.viewModel
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.example.recipeappiti.core.model.local.repository.UserRepository
 import com.example.recipeappiti.core.model.remote.repository.MealRepository
 
 class SearchFragmentViewModelFactory(

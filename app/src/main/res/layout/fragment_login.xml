@@ -15,20 +15,19 @@
 
         <TextView
             android:id="@+id/titleText"
-            android:text="@string/signin"
-            android:textSize="50sp"
-            android:fontFamily="@font/work_sans"
-            android:textStyle="bold"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="60dp"
             android:elevation="@dimen/elevation"
+            android:fontFamily="@font/work_sans"
+            android:text="@string/signin"
             android:textAppearance="@style/CustomTextStyle"
+            android:textSize="50sp"
+            android:textStyle="bold"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintHorizontal_bias="0.5"
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toTopOf="parent" />
-
 
 
         <com.google.android.material.card.MaterialCardView
@@ -36,21 +35,21 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/MarginTop"
+            app:cardBackgroundColor="@color/white_v2"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/titleText"
-            app:strokeWidth="0dp"
-            app:cardBackgroundColor="@color/white_v3">
+            app:strokeWidth="0dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/emailLayout2"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:boxBackgroundColor="@color/white_v2"
-                app:helperTextTextColor="@color/warning"
+                android:layout_margin="5dp"
                 app:boxStrokeWidth="0dp"
                 app:helperTextTextAppearance="@style/CustomHelperTextStyle"
+                app:helperTextTextColor="@color/warning"
                 app:hintEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -72,24 +71,24 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/MarginTop"
+            app:cardBackgroundColor="@color/white_v2"
             app:layout_constraintEnd_toStartOf="@+id/guideline2"
             app:layout_constraintStart_toStartOf="@+id/guideline"
             app:layout_constraintTop_toBottomOf="@+id/emailCard"
-            app:strokeWidth="0dp"
-            app:cardBackgroundColor="@color/white_v3">
+            app:strokeWidth="0dp">
 
             <com.google.android.material.textfield.TextInputLayout
                 android:id="@+id/passwordLayout2"
                 style="@style/Widget.Material3.TextInputLayout.OutlinedBox.Dense"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:boxBackgroundColor="@color/white_v2"
-                app:counterTextColor="@color/black"
-                app:counterTextAppearance="@font/poppins_light"
-                app:endIconMode="password_toggle"
+                android:layout_margin="5dp"
                 app:boxStrokeWidth="0dp"
-                app:helperTextTextColor="@color/warning"
+                app:counterTextAppearance="@font/poppins_light"
+                app:counterTextColor="@color/black"
+                app:endIconMode="password_toggle"
                 app:helperTextTextAppearance="@style/CustomHelperTextStyle"
+                app:helperTextTextColor="@color/warning"
                 app:hintEnabled="true">
 
                 <com.google.android.material.textfield.TextInputEditText

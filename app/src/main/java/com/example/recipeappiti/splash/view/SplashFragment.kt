@@ -11,11 +11,11 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.recipeappiti.R
-import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
 import com.example.recipeappiti.core.model.local.repository.UserRepositoryImpl
+import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
 import com.example.recipeappiti.core.model.local.source.UserDatabase
-import com.example.recipeappiti.core.model.remote.FailureReason
 import com.example.recipeappiti.core.model.remote.Response
+import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder.createFailureResponse
 import com.example.recipeappiti.main.view.RecipeActivity
 import com.example.recipeappiti.splash.viewModel.SplashViewModel
 import com.example.recipeappiti.splash.viewModel.SplashViewModelFactory
@@ -46,12 +46,9 @@ class SplashFragment : Fragment() {
 
         viewModel.loggedInUser.observe(viewLifecycleOwner) { response ->
             when (response) {
-                is Response.Loading -> {
-
-                }
+                is Response.Loading -> {}
 
                 is Response.Success -> {
-
 
                     Handler(Looper.getMainLooper()).postDelayed({
                         if (response.data) {
@@ -65,16 +62,7 @@ class SplashFragment : Fragment() {
                 }
 
                 is Response.Failure -> {
-                    when (val failureReason = response.reason) {
-                        is FailureReason.NoInternet -> {
-
-                        }
-
-                        is FailureReason.UnknownError -> {
-                            val errorMessage = failureReason.error
-
-                        }
-                    }
+                    createFailureResponse(response, requireContext())
                 }
             }
         }

@@ -16,7 +16,6 @@ import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
 import androidx.navigation.fragment.findNavController
@@ -24,19 +23,17 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.recipeappiti.R
-import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
 import com.example.recipeappiti.core.model.local.repository.UserRepositoryImpl
+import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
 import com.example.recipeappiti.core.model.local.source.UserDatabase
+import com.example.recipeappiti.core.model.remote.Meal
+import com.example.recipeappiti.core.model.remote.repository.MealRepositoryImpl
+import com.example.recipeappiti.core.model.remote.source.RemoteGsonDataImpl
+import com.example.recipeappiti.core.viewmodel.DataViewModel
+import com.example.recipeappiti.core.viewmodel.DataViewModelFactory
 import com.example.recipeappiti.details.view.adapters.IngredientsRecyclerViewAdapter
 import com.example.recipeappiti.details.viewmodel.DetailsViewModel
 import com.example.recipeappiti.details.viewmodel.DetailsViewModelFactory
-import com.example.recipeappiti.core.model.remote.source.RemoteGsonDataImpl
-import com.example.recipeappiti.core.model.remote.Meal
-import com.example.recipeappiti.core.model.remote.repository.MealRepositoryImpl
-import com.example.recipeappiti.core.viewmodel.DataViewModel
-import com.example.recipeappiti.core.viewmodel.DataViewModelFactory
-import com.example.recipeappiti.main.viewModel.RecipeActivityViewModel
-import com.example.recipeappiti.main.viewModel.RecipeActivityViewModelFactory
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.card.MaterialCardView
 import com.pierfrancescosoffritti.androidyoutubeplayer.core.player.YouTubePlayer
@@ -169,7 +166,7 @@ class RecipeDetailFragment : Fragment() {
 
     private fun initObservers() {
 
-        dataViewModel.itemDetails.observe(viewLifecycleOwner) {id ->
+        dataViewModel.itemDetails.observe(viewLifecycleOwner) { id ->
             recipeId = id
             changeFavouriteState(recipeId, false)
             detailsViewModel.getMealDetails(id)

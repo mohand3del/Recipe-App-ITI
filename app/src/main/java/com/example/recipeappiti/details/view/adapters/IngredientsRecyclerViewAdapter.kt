@@ -6,9 +6,10 @@ import android.view.ViewGroup
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 
-class IngredientsRecyclerViewAdapter:
+class IngredientsRecyclerViewAdapter :
     RecyclerView.Adapter<IngredientsRecyclerViewAdapter.ViewHolder>() {
     private var data: List<String> = emptyList()
+
     inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val textView: TextView = itemView.findViewById(android.R.id.text1)
     }
