@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,11 +21,10 @@ import com.example.recipeappiti.R
 import com.example.recipeappiti.core.model.local.repository.UserRepositoryImpl
 import com.example.recipeappiti.core.model.local.source.LocalDataSourceImpl
 import com.example.recipeappiti.core.model.local.source.UserDatabase
-import com.example.recipeappiti.core.model.remote.FailureReason
 import com.example.recipeappiti.core.model.remote.Response
 import com.example.recipeappiti.core.model.remote.repository.MealRepositoryImpl
 import com.example.recipeappiti.core.model.remote.source.RemoteGsonDataImpl
-import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder
+import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder.createFailureResponse
 import com.example.recipeappiti.core.viewmodel.DataViewModel
 import com.example.recipeappiti.core.viewmodel.DataViewModelFactory
 import com.example.recipeappiti.search.view.adapters.AdapterRVSearchMeals
@@ -57,6 +57,11 @@ class SearchFragment : Fragment() {
         val mealRepository = MealRepositoryImpl(RemoteGsonDataImpl())
         DataViewModelFactory(userRepository, mealRepository)
     }
+
+    private val navOptions = NavOptions.Builder()
+        .setEnterAnim(R.anim.slide_in_right)
+        .setPopExitAnim(R.anim.slide_out_right)
+        .build()
 
     override fun onDestroyView() {
         super.onDestroyView()
@@ -117,9 +122,7 @@ class SearchFragment : Fragment() {
         viewModel.dataMeals.observe(viewLifecycleOwner) { response ->
 
             when (response) {
-                is Response.Loading -> {
-
-                }
+                is Response.Loading -> {}
 
                 is Response.Success -> {
 
@@ -138,7 +141,7 @@ class SearchFragment : Fragment() {
                 }
 
                 is Response.Failure -> {
-                    failureResponse(response)
+                    createFailureResponse(response, requireContext())
                 }
             }
 
@@ -181,9 +184,7 @@ class SearchFragment : Fragment() {
             cuisineMeals.observe(viewLifecycleOwner) { response ->
 
                 when (response) {
-                    is Response.Loading -> {
-
-                    }
+                    is Response.Loading -> {}
 
                     is Response.Success -> {
 
@@ -199,7 +200,7 @@ class SearchFragment : Fragment() {
                     }
 
                     is Response.Failure -> {
-                        failureResponse(response)
+                        createFailureResponse(response, requireContext())
                     }
                 }
 
@@ -218,9 +219,7 @@ class SearchFragment : Fragment() {
             categoryMeals.observe(viewLifecycleOwner) { response ->
 
                 when (response) {
-                    is Response.Loading -> {
-
-                    }
+                    is Response.Loading -> {}
 
                     is Response.Success -> {
 
@@ -236,7 +235,7 @@ class SearchFragment : Fragment() {
                     }
 
                     is Response.Failure -> {
-                        failureResponse(response)
+                        createFailureResponse(response, requireContext())
                     }
                 }
 
@@ -246,39 +245,10 @@ class SearchFragment : Fragment() {
 
     }
 
-    private fun failureResponse(response: Response.Failure) {
-        when (val failureReason = response.reason) {
-            is FailureReason.NoInternet -> {
-                // Show no internet connection message
-                CreateMaterialAlertDialogBuilder.createMaterialAlertDialogBuilderOkCancel(
-                    requireContext(),
-                    title = "No Internet Connection",
-                    message = "Please check your internet connection and try again.",
-                    positiveBtnMsg = "Try again",
-                    negativeBtnMsg = "Cancel"
-                ) {
-                    //TODO Optionally, define any action to take after the dialog is dismissed
-                }
-            }
-
-            is FailureReason.UnknownError -> {
-                val errorMessage = failureReason.error
-                CreateMaterialAlertDialogBuilder.createMaterialAlertDialogBuilderOk(
-                    requireContext(),
-                    title = "Unknown Error",
-                    message = "An unknown error occurred: $errorMessage",
-                    positiveBtnMsg = "OK"
-                ) {
-
-                }
-            }
-        }
-    }
-
     private fun goToDetails(id: String) {
         dataViewModel.setItemDetails(id)
 
-        navController?.navigate(R.id.recipeDetailFragment)
+        navController?.navigate(R.id.recipeDetailFragment, null, navOptions)
     }
 
     private fun changeFavouriteState(

@@ -23,7 +23,7 @@ class DataViewModel(
     private val _itemDetails = MutableLiveData<String>()
     val itemDetails: LiveData<String> get() = _itemDetails
 
-    private val _favouritesList = MutableLiveData<MutableList<String>>()
+    private val _favouritesList = MutableLiveData<MutableSet<String>>()
 
     private val _isFavourite = MutableLiveData<Boolean>()
     val isFavourite: LiveData<Boolean> get() = _isFavourite
@@ -56,7 +56,7 @@ class DataViewModel(
     private fun loadFavoriteItems() {
         viewModelScope.launch {
             _favouritesList.value =
-                userRepository.getLoggedInUser()?.favourites?.toMutableList() ?: mutableListOf()
+                userRepository.getLoggedInUser()?.favourites?.toMutableSet() ?: mutableSetOf()
         }.invokeOnCompletion {
             getMeals()
         }

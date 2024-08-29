@@ -15,7 +15,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeappiti.R
@@ -93,6 +95,11 @@ class HomeFragment : Fragment() {
     private lateinit var bottomNavigationView: BottomNavigationView
     private lateinit var drawer: DrawerLayout
     private lateinit var searchBarHome: TextView
+
+    private val navOptions = NavOptions.Builder()
+        .setEnterAnim(R.anim.slide_in_right)
+        .setPopExitAnim(R.anim.slide_out_right)
+        .build()
 
     private var navController: NavController? = null
 
@@ -372,7 +379,7 @@ class HomeFragment : Fragment() {
 
         dataViewModel.setItemDetails(id)
 
-        navController?.navigate(R.id.recipeDetailFragment)
+        navController?.navigate(R.id.recipeDetailFragment, null, navOptions)
 
     }
 
