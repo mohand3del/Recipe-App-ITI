@@ -5,6 +5,7 @@
     android:id="@+id/frameLayout2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     tools:context=".auth.resetpassword.EmailVerificationFragment">
 
 
@@ -13,23 +14,24 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="112dp"
-        android:text="Forget Password?"
         android:fontFamily="@font/work_sans"
-        android:textStyle="bold"
+        android:text="Forget Password?"
         android:textSize="32sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/emailCard2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/MarginTop"
+        app:cardBackgroundColor="@color/white_v3"
         app:layout_constraintEnd_toStartOf="@+id/guideline2"
         app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/forgetTv"
-        app:strokeWidth="0dp"
-        app:cardBackgroundColor="@color/white_v3">
+        app:strokeWidth="0dp">
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/emailLayout2"
@@ -37,9 +39,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:boxBackgroundColor="@color/white_v2"
-            app:helperTextTextColor="@color/warning"
             app:boxStrokeWidth="0dp"
             app:helperTextTextAppearance="@style/CustomHelperTextStyle"
+            app:helperTextTextColor="@color/warning"
             app:hintEnabled="true">
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -69,10 +71,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="32dp"
-        android:text="Back to Log In"
         android:fontFamily="@font/work_sans"
-        android:textStyle="bold"
+        android:text="Back to Log In"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/forgetButton" />
@@ -102,14 +104,12 @@
         app:layout_constraintVertical_bias="0.353" />
 
 
-
-
     <androidx.constraintlayout.widget.Guideline
-    android:id="@+id/guideline"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:layout_constraintGuide_begin="21dp" />
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_begin="21dp" />
 
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/guideline2"

@@ -9,7 +9,8 @@ import com.example.recipeappiti.R
 import com.example.recipeappiti.core.model.remote.Meal
 
 class FavouriteRecyclerAdapter(
-    private val changeFav: (id: String, isChange: Boolean, onComplete: (Boolean) -> Unit) -> Unit
+    private val changeFav: (id: String, isChange: Boolean, onComplete: (Boolean) -> Unit) -> Unit,
+    private val goToDetails: (id: String) -> Unit
 ) : RecyclerView.Adapter<FavouriteRecyclerAdapter.MealViewHolder>() {
     private var meals: MutableList<Meal> = mutableListOf()
 
@@ -38,6 +39,12 @@ class FavouriteRecyclerAdapter(
         }
 
         holder.mealNameTextView.text = meal.strMeal
+
+        holder.itemView.setOnClickListener {
+
+            goToDetails(meal.idMeal)
+
+        }
 
         Glide.with(holder.itemView.context)
             .load(meal.strMealThumb)

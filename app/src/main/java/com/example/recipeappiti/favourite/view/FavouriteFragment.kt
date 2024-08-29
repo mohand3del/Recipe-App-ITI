@@ -9,6 +9,9 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.viewModelScope
+import androidx.navigation.NavController
+import androidx.navigation.NavOptions
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeappiti.R
@@ -35,7 +38,12 @@ class FavouriteFragment : Fragment() {
     private lateinit var favouriteRecycle: RecyclerView
     private lateinit var adapter: FavouriteRecyclerAdapter
     private var favouriteState = false
+    private var navController: NavController? = null
 
+    private val navOptions = NavOptions.Builder()
+        .setEnterAnim(R.anim.slide_in_right)
+        .setPopExitAnim(R.anim.slide_out_right)
+        .build()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -48,12 +56,17 @@ class FavouriteFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         initObservers()
         favouriteRecycle = view.findViewById(R.id.favouriteRecycle)
-        adapter = FavouriteRecyclerAdapter { id, isChange, onComplete ->
+
+        adapter = FavouriteRecyclerAdapter({ id, isChange, onComplete ->
             changeFavouriteState(id, isChange, onComplete)
-        }
+        }, { id -> goToDetails(id) })
+
         favouriteRecycle.layoutManager = GridLayoutManager(requireContext(), 2)
         favouriteRecycle.adapter = adapter
 
+        navController =
+            requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
+                ?.findNavController()
     }
 
     private fun initObservers() {
@@ -77,4 +90,11 @@ class FavouriteFragment : Fragment() {
             onComplete(favouriteState)
         }
     }
+
+    private fun goToDetails(id: String) {
+        dataViewModel.setItemDetails(id)
+
+        navController?.navigate(R.id.recipeDetailFragment, null, navOptions)
+    }
+
 }
