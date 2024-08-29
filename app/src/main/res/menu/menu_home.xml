@@ -18,8 +18,4 @@
         android:id="@+id/action_favourite"
         app:showAsAction="ifRoom"/>
 
-    <item android:title="Profile"
-        android:icon="@drawable/icon_person"
-        android:id="@+id/action_profile"
-        app:showAsAction="ifRoom"/>
 </menu>

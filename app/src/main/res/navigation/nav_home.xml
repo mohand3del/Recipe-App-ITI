@@ -19,7 +19,7 @@
     </fragment>
     <fragment
         android:id="@+id/action_profile"
-        android:name="com.example.recipeappiti.profile.view.ProfileFragment"
+        android:name="com.example.recipeappiti.profile.view.fragments.ProfileFragment"
         android:label="fragment_profile"
         tools:layout="@layout/fragment_profile" />
     <fragment
