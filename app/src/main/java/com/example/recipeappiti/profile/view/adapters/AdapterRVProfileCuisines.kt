@@ -8,13 +8,12 @@ import com.example.recipeappiti.R
 import com.example.recipeappiti.core.model.remote.Area
 import com.google.android.material.chip.Chip
 
-class AdapterRVMyCuisines(
+class AdapterRVProfileCuisines(
     private val chipList: List<Area>,
     private var lastCuisine: ((String?) -> Unit)?,
-    private val myChipsList: List<Area>?
+    private val userCuisines: List<String>?
 ) :
-    RecyclerView.Adapter<AdapterRVMyCuisines.ChipViewHolder>() {
-
+    RecyclerView.Adapter<AdapterRVProfileCuisines.ChipViewHolder>() {
     private val selectedCuisines = mutableSetOf<String>()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ChipViewHolder {
@@ -24,15 +23,14 @@ class AdapterRVMyCuisines(
     }
 
     override fun onBindViewHolder(holder: ChipViewHolder, position: Int) {
-
-
         val chip = chipList[position]
-        val chipText = chipList[position].strArea
+        val chipText = chip.strArea
         holder.chip.text = chipText
 
-        holder.chip.isChecked = selectedCuisines.contains(chipText)
-
-        holder.chip.isChecked = myChipsList?.contains(chip) == true
+        if (userCuisines?.contains(chipText) == true) {
+            selectedCuisines.add(chipText)
+            holder.chip.isChecked = true
+        }
 
         holder.chip.setOnClickListener {
             if (selectedCuisines.contains(chipText)) {
@@ -47,7 +45,6 @@ class AdapterRVMyCuisines(
                 lastCuisine?.invoke(null)
             else
                 lastCuisine?.invoke(selectedCuisines.firstOrNull())
-
         }
     }
 
@@ -58,5 +55,4 @@ class AdapterRVMyCuisines(
     }
 
     fun getSelectedCuisines() = selectedCuisines.toList()
-
 }

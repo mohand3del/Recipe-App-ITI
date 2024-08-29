@@ -1,5 +1,6 @@
 package com.example.recipeappiti.core.viewmodel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -13,6 +14,7 @@ class DataViewModel(
     private val userRepository: UserRepository,
     private val mealRepository: MealRepository
 ) : ViewModel() {
+    private val _favouritesList = MutableLiveData<MutableSet<String>>()
 
     private val _categorySearch = MutableLiveData<String?>()
     val categorySearch: LiveData<String?> get() = _categorySearch
@@ -23,14 +25,11 @@ class DataViewModel(
     private val _itemDetails = MutableLiveData<String>()
     val itemDetails: LiveData<String> get() = _itemDetails
 
-    private val _favouritesList = MutableLiveData<MutableSet<String>>()
-
     private val _isFavourite = MutableLiveData<Boolean>()
     val isFavourite: LiveData<Boolean> get() = _isFavourite
 
     private val _recipes = MutableLiveData<MutableList<Meal>>()
     val recipes: LiveData<MutableList<Meal>> get() = _recipes
-
 
     private val _cuisinesData = MutableLiveData<List<String>>()
     val cuisinesData: LiveData<List<String>> get() = _cuisinesData
@@ -43,13 +42,11 @@ class DataViewModel(
     }
 
     fun setCuisines(cuisines: List<String>) {
-
         _cuisinesData.value = cuisines
+        Log.d("cuisines", _cuisinesData.value.toString())
 
         viewModelScope.launch {
-
             userRepository.updateCuisines(cuisines)
-
         }
     }
 

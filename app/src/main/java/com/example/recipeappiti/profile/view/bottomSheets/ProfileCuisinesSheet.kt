@@ -22,12 +22,11 @@ import com.example.recipeappiti.core.viewmodel.DataViewModel
 import com.example.recipeappiti.core.viewmodel.DataViewModelFactory
 import com.example.recipeappiti.home.viewModel.BottomSheetCuisinesViewModel
 import com.example.recipeappiti.home.viewModel.BottomSheetCuisinesViewModelFactory
-import com.example.recipeappiti.profile.view.adapters.AdapterRVMyCuisines
+import com.example.recipeappiti.profile.view.adapters.AdapterRVProfileCuisines
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class BottomSheetMyCuisines : BottomSheetDialogFragment() {
-
-    private val viewModel: BottomSheetCuisinesViewModel by viewModels {
+class ProfileCuisinesSheet : BottomSheetDialogFragment() {
+    private val sheetViewModel: BottomSheetCuisinesViewModel by viewModels {
         val remoteGsonDataSource = RemoteGsonDataImpl()
         val database = UserDatabase.getDatabaseInstance(requireContext())
         val userDao = database.userDao()
@@ -60,23 +59,24 @@ class BottomSheetMyCuisines : BottomSheetDialogFragment() {
 
         recyclerviewCuisines.layoutManager = gridLayoutManager
 
-        dataViewModel.cuisinesData.observe(viewLifecycleOwner) { dismiss() }
+        sheetViewModel.getAllCuisines()
 
-        viewModel.getAllCuisines()
-
-        viewModel.allCuisines.observe(viewLifecycleOwner) { response ->
+        sheetViewModel.allCuisines.observe(viewLifecycleOwner) { response ->
             when (response) {
                 is Response.Loading -> {
                     progressBar.visibility = View.VISIBLE
                 }
 
                 is Response.Success -> {
-                    val adapter = AdapterRVMyCuisines(response.data.meals, { lastCuisine ->
+                    val adapter = AdapterRVProfileCuisines(response.data.meals, { lastCuisine ->
                         dataViewModel.updateMainCuisine(lastCuisine)
-                    }, null)
+                    }, dataViewModel.cuisinesData.value)
                     progressBar.visibility = View.GONE
                     recyclerviewCuisines.adapter = adapter
-                    btnDone.setOnClickListener { dataViewModel.setCuisines(adapter.getSelectedCuisines()) }
+                    btnDone.setOnClickListener {
+                        dataViewModel.setCuisines(adapter.getSelectedCuisines())
+                        dismiss()
+                    }
                 }
 
                 is Response.Failure -> {
@@ -87,7 +87,5 @@ class BottomSheetMyCuisines : BottomSheetDialogFragment() {
         return view
     }
 
-    companion object {
-        const val TAG = "BottomSheetCuisines"
-    }
+    companion object { const val TAG = "BottomSheetCuisines" }
 }
