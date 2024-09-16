@@ -17,7 +17,6 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.NavController
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.navOptions
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.recipeappiti.R
@@ -107,21 +106,16 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         val view = inflater.inflate(R.layout.fragment_home, container, false)
 
         initializeUi(view)
-
-        initUi()
+        initObservers()
 
         searchBarHome.setOnClickListener {
-
             recipeViewModel.navigateTo(R.id.action_search)
-
         }
 
         btnFreeTrial.setOnClickListener {
-
             createMaterialAlertDialogBuilderOkCancel(
                 requireContext(),
                 "Start Free Trial",
@@ -129,13 +123,9 @@ class HomeFragment : Fragment() {
                 "Start Free Trial",
                 "Cancel"
             ) {
-                cardViewFreeTrial.visibility = View.GONE
-
-                constraintLayoutGold.visibility = View.VISIBLE
+                dataViewModel.updateSubscriptionState(true)
             }
-
         }
-
 
         btnCuisines.setOnClickListener {
             popup.show()
@@ -145,32 +135,40 @@ class HomeFragment : Fragment() {
     }
 
 
-    private fun initUi() {
+    private fun initObservers() {
 
         with(dataViewModel) {
-
             mainCuisine.observe(viewLifecycleOwner) { mainCuisine ->
-
                 mainCuisine?.let { homeFavCuisines(it) }
-
             }
-
         }
 
         with(dataViewModel) {
+            isSubscribed.observe(viewLifecycleOwner) { subscribed ->
+                subscribed?.let {
+                    when (it) {
+                        true -> {
+                            cardViewFreeTrial.visibility = View.GONE
+                            constraintLayoutGold.visibility = View.VISIBLE
+                        }
+                        false -> {
+                            cardViewFreeTrial.visibility = View.VISIBLE
+                            constraintLayoutGold.visibility = View.GONE
+                        }
+                    }
+                }
+            }
+        }
 
+        with(dataViewModel) {
             cuisinesData.observe(viewLifecycleOwner) { data ->
-
                 data?.forEachIndexed { index, item ->
                     popup.menu.add(0, index, 0, item)
                 }
-
             }
-
         }
 
         with(viewModel) {
-
             getCategories()
             dataCategories.observe(viewLifecycleOwner) { response ->
 
@@ -195,12 +193,10 @@ class HomeFragment : Fragment() {
                         createFailureResponse(response, requireContext())
                     }
                 }
-
             }
         }
 
         with(viewModel) {
-
             getSomeRandomMeal(10)
             someRandomMeal.observe(viewLifecycleOwner) { response ->
 
@@ -220,12 +216,10 @@ class HomeFragment : Fragment() {
                         createFailureResponse(response, requireContext())
                     }
                 }
-
             }
         }
 
         with(viewModel) {
-
             getSomeRandomMeal(5)
             someRandomMeal.observe(viewLifecycleOwner) { response ->
 
@@ -245,7 +239,6 @@ class HomeFragment : Fragment() {
                         createFailureResponse(response, requireContext())
                     }
                 }
-
             }
         }
 
@@ -293,7 +286,6 @@ class HomeFragment : Fragment() {
 
             }
         }
-
     }
 
     private fun initializeUi(view: View) {

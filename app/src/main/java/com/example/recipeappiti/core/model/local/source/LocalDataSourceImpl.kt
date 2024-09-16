@@ -51,8 +51,8 @@ class LocalDataSourceImpl(private val userDao: UserDao) : LocalDataSource {
         userDao.updateLoggedInUserFavourites(favourites)
     }
 
-    override suspend fun updateSubscriptionState() {
-        userDao.updateSubscriptionState()
+    override suspend fun updateSubscriptionState(isSubscribed: Boolean) {
+        userDao.updateSubscriptionState(isSubscribed)
     }
 
     override suspend fun checkSubscriptionState(): Boolean {

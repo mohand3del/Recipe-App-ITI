@@ -27,7 +27,7 @@ interface LocalDataSource {
 
     suspend fun updateUserFavourites(favourites: List<String>)
 
-    suspend fun updateSubscriptionState()
+    suspend fun updateSubscriptionState(isSubscribed: Boolean)
 
     suspend fun checkSubscriptionState(): Boolean
 }

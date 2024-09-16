@@ -44,8 +44,8 @@ interface UserDao {
     @Query("UPDATE user SET favourites = :favourites WHERE isLoggedIn = 1")
     suspend fun updateLoggedInUserFavourites(favourites: List<String>)
 
-    @Query("UPDATE user SET isSubscribed = 1 WHERE isLoggedIn = 1")
-    suspend fun updateSubscriptionState()
+    @Query("UPDATE user SET isSubscribed = :subscribed WHERE isLoggedIn = 1")
+    suspend fun updateSubscriptionState(subscribed: Boolean)
 
     @Query("SELECT isSubscribed FROM user WHERE isLoggedIn = 1")
     suspend fun checkSubscriptionState(): Boolean

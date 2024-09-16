@@ -52,8 +52,8 @@ class UserRepositoryImpl(private val userDataSource: LocalDataSource) : UserRepo
         userDataSource.updateUserFavourites(favourites)
     }
 
-    override suspend fun updateSubscriptionState() {
-        userDataSource.updateSubscriptionState()
+    override suspend fun updateSubscriptionState(isSubscribed: Boolean) {
+        userDataSource.updateSubscriptionState(isSubscribed)
     }
 
     override suspend fun checkSubscriptionState(): Boolean {
