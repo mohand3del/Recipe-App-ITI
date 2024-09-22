@@ -11,10 +11,9 @@ import com.example.recipeappiti.R
 import com.example.recipeappiti.core.model.remote.Category
 
 class AdapterRVCategories(
-    private val categories: List<Category>,
+    private var categories: List<Category>,
     private val goToSearch: ((id: String) -> Unit)? = null
-) :
-    RecyclerView.Adapter<AdapterRVCategories.CategoryViewHolder>() {
+) : RecyclerView.Adapter<AdapterRVCategories.CategoryViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CategoryViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -33,15 +32,19 @@ class AdapterRVCategories(
                 .into(imageView)
 
             itemView.setOnClickListener { goToSearch?.let { it(category.strCategory) } }
-
         }
     }
 
     override fun getItemCount(): Int = categories.size
 
+    fun submitList(newCategories: List<Category>) {
+        categories = newCategories
+        notifyDataSetChanged()
+    }
+
     class CategoryViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.item_category_image)
         val textView: TextView = itemView.findViewById(R.id.item_category_title)
-
     }
 }
+

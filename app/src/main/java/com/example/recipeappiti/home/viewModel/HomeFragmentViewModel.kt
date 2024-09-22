@@ -1,5 +1,6 @@
 package com.example.recipeappiti.home.viewModel
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,7 +12,12 @@ import com.example.recipeappiti.core.model.remote.GsonDataMeal
 import com.example.recipeappiti.core.model.remote.Meal
 import com.example.recipeappiti.core.model.remote.Response
 import com.example.recipeappiti.core.model.remote.repository.MealRepository
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.awaitAll
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 import java.io.IOException
 
 class HomeFragmentViewModel(
@@ -23,33 +29,18 @@ class HomeFragmentViewModel(
     val dataCategories: LiveData<Response<GsonDataCategories>> get() = _dataCategories
 
     fun getCategories() {
-
         applyResponse(_dataCategories) {
             mealRepository.getCategories()
         }
-
-    }
-
-    private val _randomMeal: MutableLiveData<Response<GsonDataMeal>> = MutableLiveData()
-    val randomMeal: LiveData<Response<GsonDataMeal>> get() = _randomMeal
-
-    fun getRandomMeal() {
-
-        applyResponse(_randomMeal) {
-            mealRepository.getRandomDataMeal()
-        }
-
     }
 
     private val _userCuisines: MutableLiveData<Response<List<String>?>> = MutableLiveData()
     val userCuisines: LiveData<Response<List<String>?>> get() = _userCuisines
 
     fun getUserCuisines() {
-
         applyResponse(_userCuisines) {
             userRepository.getLoggedInUser()?.cuisines
         }
-
     }
 
     private var _filteredMealsByAreas: MutableLiveData<Response<GsonDataMeal>> = MutableLiveData()
@@ -61,83 +52,46 @@ class HomeFragmentViewModel(
         }
     }
 
-    private val _someRandomMeal = MutableLiveData<Response<MutableList<Meal>>>()
-    val someRandomMeal: LiveData<Response<MutableList<Meal>>> get() = _someRandomMeal
+    private val _someGoldMeals = MutableLiveData<Response<MutableList<Meal>>>()
+    val someGoldMeals: LiveData<Response<MutableList<Meal>>> get() = _someGoldMeals
 
-    fun getSomeRandomMeal(much: Int) {
-        _someRandomMeal.value = Response.Loading
+    private val _someRecommendedMeals = MutableLiveData<Response<MutableList<Meal>>>()
+    val someRecommendedMeals: LiveData<Response<MutableList<Meal>>> get() = _someRecommendedMeals
 
-        viewModelScope.launch {
-            try {
-
-                val meals = mutableListOf<Meal>()
-
-                val meals2 = mutableListOf<Meal>().apply {
-                    repeat(much) {
-
-                        add(
-
-
-                            mealRepository.getRandomDataMeal().meals.first()
-
-                        )
-                    }
-                }
-                meals.addAll(meals2)
-
-//                val meals = mutableListOf<Meal>()
-//
-//                val meals2 = mutableListOf<Deferred<Meal>>().apply {
-//                    repeat(much) {
-//
-//                        add(
-//                            async {
-//
-//                                mealRepository.getRandomDataMeal().meals.first()
-//                            }
-//                        )
-//                    }
-//                }
-//                meals.addAll(meals2.awaitAll())
-                //StandaloneCoroutine is cancelling
-                //kotlinx.coroutines.JobCancellationException: StandaloneCoroutine is cancelling; job=StandaloneCoroutine{Cancelling}@f71d6d
-
-                _someRandomMeal.value = Response.Success(meals)
-            } catch (e: IOException) { // Example for no internet
-                _someRandomMeal.value = Response.Failure(FailureReason.NoInternet)
-            } catch (e: Exception) {
-                _someRandomMeal.value = Response.Failure(
-                    FailureReason.UnknownError(
-                        error = e.message ?: "Unknown error occurred"
-                    )
-                )
+    fun getRandomMeals(much: Int, isGold: Boolean = false) {
+        val responseHandler = MutableLiveData<Response<MutableList<Meal>>>()
+        responseHandler.observeForever { response ->
+            when (isGold) {
+                true -> _someGoldMeals.value = response
+                false -> _someRecommendedMeals.value = response
             }
         }
+        responseHandler.value = Response.Loading
+
+        val handler = CoroutineExceptionHandler { _, exception ->
+            responseHandler.value = Response.Failure(
+                FailureReason.UnknownError(
+                    error = exception.message ?: "Unknown error occurred"
+                )
+            )
+            Log.e("HomeFragmentViewModel", "Unknown: ${exception.message}")
+        }
+
+        viewModelScope.launch(handler) {
+            val foundMeals = mutableListOf<Deferred<Meal>>().apply {
+                repeat(much) {
+                    add(
+                        async() {
+                            mealRepository.getRandomDataMeal().meals.first()
+                        }
+                    )
+                }
+            }
+            val meals = foundMeals.awaitAll().toMutableList()
+            responseHandler.value = Response.Success(meals)
+            responseHandler.removeObserver { }
+        }
     }
-
-//    fun getSomeRandomMeal(much: Int) {
-//        _someRandomMeal.value = Response.Loading
-//
-//        viewModelScope.launch {
-//            try {
-//                val meals = withContext(Dispatchers.IO) {
-//                    List(much) {
-//                        mealRepository.getRandomDataMeal().meals.first()
-//                    }
-//                }
-//                _someRandomMeal.value = Response.Success(meals.toMutableList())
-//            } catch (e: IOException) {
-//                _someRandomMeal.value = Response.Failure(FailureReason.NoInternet)
-//            } catch (e: Exception) {
-//                _someRandomMeal.value = Response.Failure(
-//                    FailureReason.UnknownError(
-//                        error = e.message ?: "Unknown error occurred"
-//                    )
-//                )
-//            }
-//        }
-//    }
-
 
     private fun <T> applyResponse(
         liveData: MutableLiveData<Response<T>>,
@@ -160,5 +114,4 @@ class HomeFragmentViewModel(
             }
         }
     }
-
 }

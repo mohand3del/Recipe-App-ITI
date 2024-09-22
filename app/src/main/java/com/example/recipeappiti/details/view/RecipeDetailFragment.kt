@@ -29,6 +29,8 @@ import com.example.recipeappiti.core.model.local.source.UserDatabase
 import com.example.recipeappiti.core.model.remote.Meal
 import com.example.recipeappiti.core.model.remote.repository.MealRepositoryImpl
 import com.example.recipeappiti.core.model.remote.source.RemoteGsonDataImpl
+import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder.createMaterialAlertDialogBuilderOk
+import com.example.recipeappiti.core.util.SystemChecks
 import com.example.recipeappiti.core.viewmodel.DataViewModel
 import com.example.recipeappiti.core.viewmodel.DataViewModelFactory
 import com.example.recipeappiti.details.view.adapters.IngredientsRecyclerViewAdapter
@@ -111,8 +113,7 @@ class RecipeDetailFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         initViews()
-        initObservers()
-        initListeners()
+        checkConnection()
     }
 
     private fun initViews() {
@@ -143,7 +144,6 @@ class RecipeDetailFragment : Fragment() {
         instructionsText = requireView().findViewById(R.id.instructionsText)
 
         bottomNavigationView.visibility = View.GONE
-
     }
 
     private fun initListeners() {
@@ -165,7 +165,6 @@ class RecipeDetailFragment : Fragment() {
     }
 
     private fun initObservers() {
-
         dataViewModel.itemDetails.observe(viewLifecycleOwner) { id ->
             recipeId = id
             changeFavouriteState(recipeId, false)
@@ -250,6 +249,22 @@ class RecipeDetailFragment : Fragment() {
         })
         youtubePlayerView.enableAutomaticInitialization = false
         youtubePlayerView.initialize(youtubePlayerListener, iFramePlayerOptions)
+    }
+
+    private fun checkConnection() {
+        if (!SystemChecks.isNetworkAvailable(requireContext())) {
+            createMaterialAlertDialogBuilderOk(
+                requireContext(),
+                "No Internet Connection",
+                "Please check your internet connection and try again",
+                "Retry",
+            ) {
+                checkConnection()
+            }
+        } else {
+            initObservers()
+            initListeners()
+        }
     }
 
     override fun onConfigurationChanged(newConfig: Configuration) {
