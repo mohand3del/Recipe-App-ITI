@@ -11,10 +11,9 @@ import com.example.recipeappiti.R
 import com.example.recipeappiti.core.model.remote.Meal
 
 class AdapterRVItemMeal(
-    private val meals: List<Meal>,
+    private var meals: List<Meal>,
     private val goToDetails: ((id: String) -> Unit)? = null
-) :
-    RecyclerView.Adapter<AdapterRVItemMeal.MealViewHolder>() {
+) : RecyclerView.Adapter<AdapterRVItemMeal.MealViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MealViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -25,7 +24,6 @@ class AdapterRVItemMeal(
     override fun onBindViewHolder(holder: MealViewHolder, position: Int) {
         val meal = meals[position]
 
-
         holder.titleView.text = formatDescription(meal.strMeal)
 
         Glide.with(holder.itemView.context)
@@ -34,11 +32,15 @@ class AdapterRVItemMeal(
             .into(holder.imageView)
 
         holder.imageView.setOnClickListener {
-
             goToDetails?.let { it(meal.idMeal) }
-
         }
+    }
 
+    override fun getItemCount(): Int = meals.size
+
+    fun submitList(newMeals: List<Meal>) {
+        meals = newMeals
+        notifyDataSetChanged()
     }
 
     private fun formatDescription(
@@ -52,8 +54,6 @@ class AdapterRVItemMeal(
             description
         }
     }
-
-    override fun getItemCount(): Int = meals.size
 
     class MealViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
         val imageView: ImageView = itemView.findViewById(R.id.item_image)

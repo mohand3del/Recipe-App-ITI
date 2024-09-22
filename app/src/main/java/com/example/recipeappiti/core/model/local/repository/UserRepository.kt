@@ -27,7 +27,7 @@ interface UserRepository {
 
     suspend fun updateFavourites(favourites: List<String>)
 
-    suspend fun updateSubscriptionState()
+    suspend fun updateSubscriptionState(isSubscribed: Boolean)
 
     suspend fun checkSubscriptionState(): Boolean
 }

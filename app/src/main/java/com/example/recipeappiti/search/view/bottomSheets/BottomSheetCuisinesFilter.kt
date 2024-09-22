@@ -14,6 +14,8 @@ import com.example.recipeappiti.core.model.remote.Response
 import com.example.recipeappiti.core.model.remote.repository.MealRepositoryImpl
 import com.example.recipeappiti.core.model.remote.source.RemoteGsonDataImpl
 import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder.createFailureResponse
+import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder.createMaterialAlertDialogBuilderOk
+import com.example.recipeappiti.core.util.SystemChecks
 import com.example.recipeappiti.search.view.adapters.AdapterRVCuisinesFilters
 import com.example.recipeappiti.search.viewModel.BottomSheetCuisinesFilterViewModel
 import com.example.recipeappiti.search.viewModel.BottomSheetCuisinesFilterViewModelFactory
@@ -35,6 +37,9 @@ class BottomSheetCuisinesFilter : BottomSheetDialogFragment() {
         SearchFragmentViewModelFactory(mealRepository)
     }
 
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var progressBar: ProgressBar
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,13 +47,17 @@ class BottomSheetCuisinesFilter : BottomSheetDialogFragment() {
     ): View? {
         val view = inflater.inflate(R.layout.bottom_sheet_cuisines_filters, container, false)
 
-        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerviewCuisinesFilter)
-        val progressBar: ProgressBar = view.findViewById(R.id.progressBarBottomSheetCuisinesFilter)
-
+        recyclerView = view.findViewById(R.id.recyclerviewCuisinesFilter)
+        progressBar = view.findViewById(R.id.progressBarBottomSheetCuisinesFilter)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        viewModel.getCuisines()
+        checkConnection()
 
+        return view
+    }
+
+    private fun initObservers() {
+        viewModel.getCuisines()
         viewModel.cuisines.observe(viewLifecycleOwner) { response ->
 
             when (response) {
@@ -71,12 +80,24 @@ class BottomSheetCuisinesFilter : BottomSheetDialogFragment() {
             }
 
         }
+    }
 
-        return view
+    private fun checkConnection() {
+        if (!SystemChecks.isNetworkAvailable(requireContext())) {
+            createMaterialAlertDialogBuilderOk(
+                requireContext(),
+                "No Internet Connection",
+                "Please check your internet connection and try again",
+                "Retry",
+            ) {
+                checkConnection()
+            }
+        } else {
+            initObservers()
+        }
     }
 
     companion object {
         const val TAG = "BottomSheetCuisinesFilter"
     }
-
 }

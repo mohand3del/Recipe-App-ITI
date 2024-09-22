@@ -6,7 +6,6 @@ import com.example.recipeappiti.core.model.remote.Response
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 
 object CreateMaterialAlertDialogBuilder {
-
     fun createMaterialAlertDialogBuilderOkCancel(
         context: Context,
         title: String,
@@ -15,7 +14,6 @@ object CreateMaterialAlertDialogBuilder {
         negativeBtnMsg: String,
         positiveBtnFun: () -> Unit
     ) {
-
         MaterialAlertDialogBuilder(context)
             .setTitle(title)
             .setMessage(message)
@@ -31,7 +29,6 @@ object CreateMaterialAlertDialogBuilder {
             }
             .setCancelable(false)
             .show()
-
     }
 
     fun createMaterialAlertDialogBuilderOk(
@@ -41,7 +38,6 @@ object CreateMaterialAlertDialogBuilder {
         positiveBtnMsg: String,
         positiveBtnFun: () -> Unit
     ) {
-
         MaterialAlertDialogBuilder(context)
             .setTitle(title)
             .setMessage(message)
@@ -53,13 +49,11 @@ object CreateMaterialAlertDialogBuilder {
             }
             .setCancelable(false)
             .show()
-
     }
 
-    fun createFailureResponse(response: Response.Failure, context: Context) {
+    fun createFailureResponse(response: Response.Failure, context: Context, action: (() -> Unit)? = null) {
         when (val failureReason = response.reason) {
             is FailureReason.NoInternet -> {
-
                 createMaterialAlertDialogBuilderOkCancel(
                     context,
                     title = "No Internet Connection",
@@ -67,7 +61,7 @@ object CreateMaterialAlertDialogBuilder {
                     positiveBtnMsg = "Try again",
                     negativeBtnMsg = "Cancel"
                 ) {
-                    //TODO Optionally, define any action to take after the dialog is dismissed
+                    action?.invoke()
                 }
             }
 
@@ -77,12 +71,11 @@ object CreateMaterialAlertDialogBuilder {
                     context,
                     title = "Unknown Error",
                     message = "An unknown error occurred: $errorMessage",
-                    positiveBtnMsg = "OK"
+                    positiveBtnMsg = "Try again"
                 ) {
-
+                    action?.invoke()
                 }
             }
         }
     }
-
 }

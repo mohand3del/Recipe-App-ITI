@@ -14,6 +14,8 @@ import com.example.recipeappiti.core.model.remote.Response
 import com.example.recipeappiti.core.model.remote.repository.MealRepositoryImpl
 import com.example.recipeappiti.core.model.remote.source.RemoteGsonDataImpl
 import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder.createFailureResponse
+import com.example.recipeappiti.core.util.CreateMaterialAlertDialogBuilder.createMaterialAlertDialogBuilderOk
+import com.example.recipeappiti.core.util.SystemChecks
 import com.example.recipeappiti.search.view.adapters.AdapterRVCategoryFilters
 import com.example.recipeappiti.search.viewModel.BottomSheetCategoriesFilterViewModel
 import com.example.recipeappiti.search.viewModel.BottomSheetCategoriesFilterViewModelFactory
@@ -35,6 +37,9 @@ class BottomSheetCategoryFilter : BottomSheetDialogFragment() {
         SearchFragmentViewModelFactory(mealRepository)
     }
 
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var progressBar: ProgressBar
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -42,14 +47,18 @@ class BottomSheetCategoryFilter : BottomSheetDialogFragment() {
     ): View? {
         val view = inflater.inflate(R.layout.bottom_sheet_categories_filters, container, false)
 
-        val recyclerView: RecyclerView = view.findViewById(R.id.recyclerviewCategoriesFilter)
-        val progressBar: ProgressBar = view.findViewById(R.id.progressBarBottomSheetCategoryFilter)
+        recyclerView = view.findViewById(R.id.recyclerviewCategoriesFilter)
+        progressBar = view.findViewById(R.id.progressBarBottomSheetCategoryFilter)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
+        checkConnection()
+
+        return view
+    }
+
+    private fun initObservers() {
         viewModel.getCategories()
-
         viewModel.categories.observe(viewLifecycleOwner) { response ->
-
             when (response) {
                 is Response.Loading -> {
                     progressBar.visibility = View.VISIBLE
@@ -69,15 +78,25 @@ class BottomSheetCategoryFilter : BottomSheetDialogFragment() {
                     createFailureResponse(response, requireContext())
                 }
             }
-
         }
+    }
 
-        return view
+    private fun checkConnection() {
+        if (!SystemChecks.isNetworkAvailable(requireContext())) {
+            createMaterialAlertDialogBuilderOk(
+                requireContext(),
+                "No Internet Connection",
+                "Please check your internet connection and try again",
+                "Retry",
+            ) {
+                checkConnection()
+            }
+        } else {
+            initObservers()
+        }
     }
 
     companion object {
         const val TAG = "BottomSheetCategoryFilter"
     }
-
-
 }

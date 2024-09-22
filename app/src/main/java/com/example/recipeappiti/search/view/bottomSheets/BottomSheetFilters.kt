@@ -45,6 +45,4 @@ class BottomSheetFilters : BottomSheetDialogFragment() {
     companion object {
         const val TAG = "BottomSheetFilters"
     }
-
-
 }

@@ -10,17 +10,20 @@
     <item
         android:id="@+id/action_settings"
         android:title="Settings"
+        android:visible="false"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_dark_mode"
         android:title="Dark Mode"
+        android:visible="false"
         app:actionLayout="@layout/switch_layout_drawer"
         app:showAsAction="ifRoom" />
 
     <item
         android:id="@+id/action_security_policies"
         android:title="Security Policies"
+        android:visible="false"
         app:showAsAction="ifRoom" />
 
     <item

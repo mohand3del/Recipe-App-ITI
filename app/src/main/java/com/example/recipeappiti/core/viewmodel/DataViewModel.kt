@@ -28,6 +28,9 @@ class DataViewModel(
     private val _isFavourite = MutableLiveData<Boolean>()
     val isFavourite: LiveData<Boolean> get() = _isFavourite
 
+    private val _isSubscribed = MutableLiveData<Boolean>()
+    val isSubscribed: LiveData<Boolean> get() = _isSubscribed
+
     private val _recipes = MutableLiveData<MutableList<Meal>>()
     val recipes: LiveData<MutableList<Meal>> get() = _recipes
 
@@ -39,6 +42,7 @@ class DataViewModel(
         _categorySearch.value = null
         _mainCuisine.value = null
         loadFavoriteItems()
+        checkSubscription()
     }
 
     fun setCuisines(cuisines: List<String>) {
@@ -86,6 +90,24 @@ class DataViewModel(
             getMeals()
         }
         _isFavourite.value = currentFavouriteState ?: false
+    }
+
+    fun updateSubscriptionState(subscribed: Boolean) {
+        viewModelScope.launch {
+            userRepository.updateSubscriptionState(subscribed)
+        }.invokeOnCompletion {
+            checkSubscription()
+        }
+    }
+
+    fun checkSubscription() {
+        viewModelScope.launch {
+            val isSubscribed = userRepository.checkSubscriptionState()
+            when (isSubscribed) {
+                true -> _isSubscribed.value = true
+                false -> _isSubscribed.value = false
+            }
+        }
     }
 
     fun updateSearchCategory(category: String?) {

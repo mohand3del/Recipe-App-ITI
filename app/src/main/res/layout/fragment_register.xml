@@ -61,7 +61,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Username"
                     android:inputType="textCapWords"
-                    android:textAppearance="@style/CustomTextStyle" />
+                    android:textAppearance="@style/CustomTextStyle"
+                    android:textColor="@color/black" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -98,7 +99,8 @@
                     android:layout_height="wrap_content"
                     android:hint="Email"
                     android:inputType="textEmailAddress"
-                    android:textAppearance="@style/CustomTextStyle" />
+                    android:textAppearance="@style/CustomTextStyle"
+                    android:textColor="@color/black" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -141,7 +143,8 @@
                     android:hint="Password"
                     android:inputType="textPassword"
                     android:maxLength="16"
-                    android:textAppearance="@style/CustomTextStyle" />
+                    android:textAppearance="@style/CustomTextStyle"
+                    android:textColor="@color/black" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -184,7 +187,8 @@
                     android:hint="Confirm Password"
                     android:inputType="textPassword"
                     android:maxLength="16"
-                    android:textAppearance="@style/CustomTextStyle" />
+                    android:textAppearance="@style/CustomTextStyle"
+                    android:textColor="@color/black" />
 
             </com.google.android.material.textfield.TextInputLayout>
 
@@ -204,6 +208,7 @@
             android:text="Sign Up"
             android:textAlignment="center"
             android:textAppearance="@style/CustomTextStyle"
+            android:textColor="@color/white"
             android:textSize="24sp"
             android:textStyle="bold"
             app:elevation="@dimen/elevation"
