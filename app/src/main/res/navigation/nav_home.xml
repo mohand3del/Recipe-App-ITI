@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_home"
+    app:startDestination="@id/action_home">
+
+    <fragment
+        android:id="@+id/action_favourite"
+        android:name="com.example.recipeappiti.favourite.view.FavouriteFragment"
+        android:label="fragment_favourite"
+        tools:layout="@layout/fragment_favourite" />
+    <fragment
+        android:id="@+id/action_home"
+        android:name="com.example.recipeappiti.home.view.fragments.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home">
+
+    </fragment>
+    <fragment
+        android:id="@+id/action_profile"
+        android:name="com.example.recipeappiti.profile.view.fragments.ProfileFragment"
+        android:label="fragment_profile"
+        tools:layout="@layout/fragment_profile" />
+    <fragment
+        android:id="@+id/action_search"
+        android:name="com.example.recipeappiti.search.view.fragments.SearchFragment"
+        android:label="fragment_search"
+        tools:layout="@layout/fragment_search">
+
+    </fragment>
+    <fragment
+        android:id="@+id/recipeDetailFragment"
+        android:name="com.example.recipeappiti.details.view.RecipeDetailFragment"
+        android:label="fragment_recipe_detail"
+        tools:layout="@layout/fragment_recipe_detail"/>
+    <fragment
+        android:id="@+id/action_about"
+        android:name="com.example.recipeappiti.aboutapp.view.AboutAppFragment"
+        android:label="fragment_about_app"
+        tools:layout="@layout/fragment_about_app" />
+    <fragment
+        android:id="@+id/action_about_developer"
+        android:name="com.example.recipeappiti.aboutDevelopers.view.AboutDevelopersFragment"
+        android:label="fragment_about_developers"
+        tools:layout="@layout/fragment_about_developers" />
+</navigation>

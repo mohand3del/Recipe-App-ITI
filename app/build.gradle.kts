@@ -77,4 +77,16 @@ dependencies {
     // Splashscreen
     implementation("androidx.core:core-splashscreen:1.0.0")
 
+    // Hashing
+    implementation("org.mindrot:jbcrypt:0.4")
+
+    // Shimmer
+    implementation ("com.facebook.shimmer:shimmer:0.5.0")
+
+    // SwipereFreshLayout
+    implementation("androidx.swiperefreshlayout:swiperefreshlayout:1.1.0")
+
+    // Youtube Player
+    implementation("com.pierfrancescosoffritti.androidyoutubeplayer:core:12.1.0")
+
 }

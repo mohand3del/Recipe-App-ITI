@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_auth"
+    app:startDestination="@id/splashFragment">
+
+    <fragment
+        android:id="@+id/registerFragment"
+        android:name="com.example.recipeappiti.auth.register.view.RegisterFragment"
+        android:label="fragment_register"
+        tools:layout="@layout/fragment_register" />
+    <fragment
+        android:id="@+id/loginFragment"
+        android:name="com.example.recipeappiti.auth.login.view.LoginFragment"
+        android:label="fragment_login"
+        tools:layout="@layout/fragment_login">
+        <action
+            android:id="@+id/action_loginFragment_to_registerFragment"
+            app:destination="@id/registerFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:popExitAnim="@android:anim/slide_out_right" />
+        <action
+            android:id="@+id/action_loginFragment_to_emailVerificationFragment2"
+            app:destination="@id/emailVerificationFragment2" />
+    </fragment>
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.example.recipeappiti.auth.splash.view.SplashFragment"
+        android:label="fragment_splash"
+        tools:layout="@layout/fragment_splash">
+        <action
+            android:id="@+id/action_splashFragment_to_loginFragment"
+            app:destination="@id/loginFragment"
+            app:enterAnim="@android:anim/slide_in_left"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <fragment
+        android:id="@+id/checkEmailFragment"
+        android:name="com.example.recipeappiti.auth.newPassword.CheckEmailFragment"
+        android:label="fragment_check_email"
+        tools:layout="@layout/fragment_check_email" >
+        <action
+            android:id="@+id/action_checkEmailFragment_to_newPasswordFragment"
+            app:destination="@id/newPasswordFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/newPasswordFragment"
+        android:name="com.example.recipeappiti.auth.newPassword.NewPasswordFragment"
+        android:label="fragment_new_password"
+        tools:layout="@layout/fragment_new_password" >
+    </fragment>
+    <fragment
+        android:id="@+id/emailVerificationFragment2"
+        android:name="com.example.recipeappiti.auth.newPassword.EmailVerificationFragment"
+        android:label="EmailVerificationFragment" >
+        <action
+            android:id="@+id/action_emailVerificationFragment2_to_checkEmailFragment"
+            app:destination="@id/checkEmailFragment" />
+    </fragment>
+
+</navigation>
